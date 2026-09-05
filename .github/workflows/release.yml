@@ -38,6 +38,13 @@ jobs:
           install_args: --locked --jobs=1
           cache: false
 
+      # Mise's cache can restore Rust links without rustup's toolchain components.
+      - name: Ensure Rust toolchains and components
+        run: |
+          rustup toolchain install 1.97.1 --profile minimal --component clippy
+          rustup toolchain install 1.94.0 --profile minimal
+          rustup toolchain install nightly-2026-04-14 --profile minimal --component rustfmt
+
       - name: Verify library release candidate
         env:
           SQLY_TEST_BACKEND: ${{ runner.os == 'macOS' && 'sqlite' || 'both' }}

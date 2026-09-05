@@ -38,6 +38,13 @@ jobs:
           version: 2026.6.11
           install_args: --locked --jobs=1
 
+      # Mise's cache can restore Rust links without rustup's toolchain components.
+      - name: Ensure Rust toolchains and components
+        run: |
+          rustup toolchain install 1.97.1 --profile minimal --component clippy
+          rustup toolchain install 1.94.0 --profile minimal
+          rustup toolchain install nightly-2026-04-14 --profile minimal --component rustfmt
+
       - name: Restore Rust build cache
         uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
         with:
