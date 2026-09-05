@@ -39,12 +39,18 @@ pub(crate) type Cursor<'a> = Pin<Box<dyn Stream<Item = Result<Row>> + Send + 'a>
 /// # Ok(()) }
 /// ```
 #[must_use = "streams execute only when polled"]
-pub struct RowStream<'a, T> {
+pub struct RowStream<'a, T, F = fn(&Row) -> Result<T>> {
     rows:   Option<Cursor<'a>>,
+    mapper: Box<F>,
     marker: PhantomData<fn() -> T>,
 }
 impl<'a, T: FromRow> Query<'a, T> {
     pub fn fetch(self) -> RowStream<'a, T> {
+        RowStream::mapped(self, T::from_row as fn(&Row) -> Result<T>)
+    }
+}
+impl<'a, T> Query<'a, T> {
+    pub(crate) fn into_cursor(self) -> Cursor<'a> {
         let rows: Cursor<'a> = if let Some(error) = self.error {
             Box::pin(once(async { Err(error) }))
         } else {
@@ -59,13 +65,19 @@ impl<'a, T: FromRow> Query<'a, T> {
                 Target::Scoped(db, read) => db.rows(sql, self.values, read),
             }
         };
-        RowStream {
-            rows:   Some(rows),
+        rows
+    }
+}
+impl<'a, T, F> RowStream<'a, T, F> {
+    pub(crate) fn mapped<U>(query: Query<'a, U>, mapper: F) -> Self {
+        Self {
+            rows:   Some(query.into_cursor()),
+            mapper: Box::new(mapper),
             marker: PhantomData,
         }
     }
 }
-impl<T: FromRow> Stream for RowStream<'_, T> {
+impl<T, F: FnMut(&Row) -> Result<T>> Stream for RowStream<'_, T, F> {
     type Item = Result<T>;
     fn poll_next(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<Self::Item>> {
         let this = self.get_mut();
@@ -74,7 +86,7 @@ impl<T: FromRow> Stream for RowStream<'_, T> {
         };
         let result = match rows.as_mut().poll_next(cx) {
             Poll::Pending => return Poll::Pending,
-            Poll::Ready(row) => row.map(|row| row.and_then(|row| T::from_row(&row))),
+            Poll::Ready(row) => row.map(|row| row.and_then(|row| (this.mapper)(&row))),
         };
         if result.is_none() || matches!(result, Some(Err(_))) {
             this.rows = None;
@@ -82,7 +94,7 @@ impl<T: FromRow> Stream for RowStream<'_, T> {
         Poll::Ready(result)
     }
 }
-impl<T> fmt::Debug for RowStream<'_, T> {
+impl<T, F> fmt::Debug for RowStream<'_, T, F> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_struct("RowStream").finish_non_exhaustive()
     }

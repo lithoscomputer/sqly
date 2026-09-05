@@ -97,6 +97,16 @@ pub struct ScopedDatabase {
 /// ```
 #[must_use = "queries execute only when a terminal method is awaited"]
 pub struct ReadQuery<'a, T>(Query<'a, T>);
+impl<'a> ReadQuery<'a, Row> {
+    /// Map rows with a fallible closure. The mapped query has no execute
+    /// method.
+    pub fn try_map<T, F: FnMut(&Row) -> Result<T>>(
+        self,
+        mapper: F,
+    ) -> crate::MappedQuery<'a, T, F> {
+        self.0.try_map(mapper)
+    }
+}
 impl<T> ReadQuery<'_, T> {
     pub fn bind(self, value: impl Encode) -> Self {
         Self(self.0.bind(value))

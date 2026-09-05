@@ -32,6 +32,7 @@ mod database;
 mod driver;
 mod error;
 mod lock;
+mod mapped;
 #[cfg(feature = "migrate")]
 pub mod migrate;
 mod options;
@@ -47,6 +48,7 @@ mod value;
 pub use database::{Database, DatabaseBuilder};
 pub use error::{Cause, ConstraintKind, DecodeKind, Error, Result};
 pub use lock::Lock;
+pub use mapped::MappedQuery;
 pub use options::{ConnectOptions, PostgresOptions, SqliteOptions, TlsMode};
 pub use query::{ExecuteResult, Query};
 pub use row::{FromRow, Row};
