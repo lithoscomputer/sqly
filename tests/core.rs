@@ -549,3 +549,30 @@ fn application_connection_options_preserve_supported_transports_and_file_policy(
     );
     assert!(SqliteOptions::in_memory().filename().is_none());
 }
+
+#[test]
+fn owned_and_borrowed_url_strings_use_the_same_parser() {
+    let url = String::from("sqlite:owned-url.db?mode=rwc");
+    let borrowed = ConnectOptions::try_from(&url).expect("borrowed URL");
+    let owned = ConnectOptions::try_from(url).expect("owned URL");
+    assert_eq!(
+        borrowed.as_sqlite().and_then(SqliteOptions::filename),
+        owned.as_sqlite().and_then(SqliteOptions::filename)
+    );
+    let invalid = String::from("postgres://user:secret@localhost/db?unsupported=secret");
+    let borrowed = ConnectOptions::try_from(&invalid).expect_err("invalid borrowed URL");
+    let owned = ConnectOptions::try_from(invalid).expect_err("invalid owned URL");
+    assert_eq!(borrowed.to_string(), owned.to_string());
+    assert!(!format!("{owned:?}").contains("secret"));
+}
+
+#[cfg(feature = "sqlite")]
+#[tokio::test]
+async fn connects_with_owned_and_borrowed_url_strings() -> sqly::Result<()> {
+    let url = String::from("sqlite::memory:");
+    let borrowed = Database::connect(&url).await?;
+    let owned = Database::builder().connect(url).await?;
+    borrowed.close().await;
+    owned.close().await;
+    Ok(())
+}

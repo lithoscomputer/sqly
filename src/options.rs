@@ -299,3 +299,16 @@ impl TryFrom<&str> for ConnectOptions {
         s.parse()
     }
 }
+
+impl TryFrom<String> for ConnectOptions {
+    type Error = Error;
+    fn try_from(input: String) -> Result<Self> {
+        input.parse()
+    }
+}
+impl TryFrom<&String> for ConnectOptions {
+    type Error = Error;
+    fn try_from(input: &String) -> Result<Self> {
+        input.parse()
+    }
+}
