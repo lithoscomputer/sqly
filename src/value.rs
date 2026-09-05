@@ -210,10 +210,12 @@ mod tests {
     fn owned_encodings_retain_their_allocations() -> crate::Result<()> {
         let text = String::from("owned text");
         let text_ptr = text.as_ptr();
-        assert_eq!(text.encode()?.as_ptr(), text_ptr);
+        let encoded_text = text.encode()?;
+        assert_eq!(encoded_text.as_ptr(), text_ptr);
         let bytes = vec![1_u8, 2, 3];
         let bytes_ptr = bytes.as_ptr();
-        assert_eq!(bytes.encode()?.as_ptr(), bytes_ptr);
+        let encoded_bytes = bytes.encode()?;
+        assert_eq!(encoded_bytes.as_ptr(), bytes_ptr);
         Ok(())
     }
 
