@@ -107,6 +107,13 @@ async fn contract(db: Database) -> Result<()> {
         !tx.lock(Lock::row("sqly_tx_contract").key("id", 999_i64))
             .await?
     );
+    tx.require_lock(Lock::row("sqly_tx_contract").key("id", 1_i64))
+        .await?;
+    assert!(matches!(
+        tx.require_lock(Lock::row("sqly_tx_contract").key("id", 999_i64))
+            .await,
+        Err(Error::LockNotFound)
+    ));
     tx.query("INSERT INTO sqly_tx_contract VALUES (4, 7)")
         .execute()
         .await?;

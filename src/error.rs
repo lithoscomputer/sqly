@@ -68,6 +68,8 @@ pub enum Error {
     InvalidLock {
         reason: &'static str,
     },
+    /// A required row lock matched no row.
+    LockNotFound,
     NonUniqueLock,
     TransactionAborted,
     #[cfg(feature = "ambient")]
@@ -242,6 +244,7 @@ impl fmt::Display for Error {
             Self::Decode { kind, .. } => write!(f, "row decoding failed: {kind:?}"),
             Self::RowNotFound => f.write_str("query returned no rows"),
             Self::InvalidLock { reason } => write!(f, "invalid lock selector: {reason}"),
+            Self::LockNotFound => f.write_str("required lock row was not found"),
             Self::NonUniqueLock => f.write_str("lock selector matched multiple rows"),
             #[cfg(feature = "ambient")]
             Self::NoActiveWriteScope => f.write_str("an active write scope is required"),

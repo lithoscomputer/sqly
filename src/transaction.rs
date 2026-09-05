@@ -97,6 +97,17 @@ impl Transaction {
     pub fn query_as<T: FromRow>(&mut self, sql: impl Into<Sql>) -> Query<'_, T> {
         Query::transaction(self, sql.into())
     }
+    /// Require an existing row lock, returning `LockNotFound` if absent.
+    /// Absence alone does not make the transaction rollback-only. Acquisition
+    /// can wait; dependent reads must follow it. Other lock errors are
+    /// preserved.
+    pub async fn require_lock(&mut self, lock: Lock) -> Result<()> {
+        if self.lock(lock).await? {
+            Ok(())
+        } else {
+            Err(Error::LockNotFound)
+        }
+    }
     /// Acquire an existing row by a primary or unique key, then read dependent
     /// data in a separate query. A missing row returns false.
     pub async fn lock(&mut self, lock: Lock) -> Result<bool> {

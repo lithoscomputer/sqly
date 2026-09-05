@@ -49,6 +49,12 @@ async fn contract(db: Database, other: Database) -> Result<()> {
         .execute()
         .await?;
     let scoped = db.scoped();
+    assert!(matches!(
+        scoped
+            .require_lock(Lock::row("sqly_ambient_items").key("id", 1_i64))
+            .await,
+        Err(Error::NoActiveWriteScope)
+    ));
     let first = Store { db: scoped.clone() };
     let second = first.clone();
     assert!(matches!(
@@ -184,10 +190,19 @@ async fn contract(db: Database, other: Database) -> Result<()> {
                 }
             )
             .await,
-        Err(Error::RowNotFound)
+        Err(Error::LockNotFound)
     ));
     scoped
         .write_locking(Lock::row("sqly_ambient_items").key("id", 6_i64), || async {
+            scoped
+                .require_lock(Lock::row("sqly_ambient_items").key("id", 6_i64))
+                .await?;
+            assert!(matches!(
+                scoped
+                    .require_lock(Lock::row("sqly_ambient_items").key("id", 999_i64))
+                    .await,
+                Err(Error::LockNotFound)
+            ));
             first.insert(7).await
         })
         .await?;

@@ -171,10 +171,10 @@ impl ScopedDatabase {
         }
         let mut tx = self.db.begin_write().await?;
         if let Some(lock) = lock
-            && !tx.lock(lock).await?
+            && let Err(error) = tx.require_lock(lock).await
         {
-            tx.rollback().await?;
-            return Err(Error::RowNotFound.into());
+            let _ = tx.rollback().await;
+            return Err(error.into());
         }
         let state = Arc::new(Scope {
             db:          self.db.clone(),
@@ -230,6 +230,17 @@ impl ScopedDatabase {
             return Err(Error::ScopeDatabaseMismatch);
         }
         Ok(scope)
+    }
+    /// Require an existing row lock, returning `LockNotFound` if absent.
+    /// Absence alone does not make the transaction rollback-only. Acquisition
+    /// can wait; dependent reads must follow it. Other lock errors are
+    /// preserved.
+    pub async fn require_lock(&self, lock: Lock) -> Result<()> {
+        if self.lock(lock).await? {
+            Ok(())
+        } else {
+            Err(Error::LockNotFound)
+        }
     }
     pub async fn lock(&self, lock: Lock) -> Result<bool> {
         let scope = self.active()?.ok_or(Error::NoActiveWriteScope)?;
