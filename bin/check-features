@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Optional Cargo toolchain selector, used by the MSRV task.
+cargo_command=(cargo)
+if [[ $# -gt 1 || ( $# -eq 1 && $1 != +* ) ]]; then
+  echo "Usage: bin/check-features [+toolchain]" >&2
+  exit 2
+fi
+if [[ $# -eq 1 ]]; then cargo_command+=("$1"); fi
+
+"${cargo_command[@]}" check --locked --all-targets
+"${cargo_command[@]}" check --locked --all-targets --no-default-features
+for features in sqlite postgres sqlite,postgres uuid,time,json,migrate,ambient \
+  sqlite,uuid,time,json,migrate,ambient postgres,uuid,time,json,migrate,ambient; do
+  "${cargo_command[@]}" check --locked --all-targets --no-default-features --features "$features"
+done
+"${cargo_command[@]}" check --locked --all-targets --all-features
+
+"${cargo_command[@]}" check --locked --manifest-path consumers/warehouse/Cargo.toml --all-targets --no-default-features
+for features in sqlite postgres sqlite,postgres; do
+  "${cargo_command[@]}" check --locked --manifest-path consumers/warehouse/Cargo.toml --all-targets --no-default-features --features "$features"
+done

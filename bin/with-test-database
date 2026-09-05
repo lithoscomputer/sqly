@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ $# -eq 0 ]]; then
+  echo "Usage: bin/with-test-database <command> [args...]" >&2
+  exit 2
+fi
+if [[ -n ${SQLY_TEST_POSTGRES_URL:-} ]]; then
+  exec "$@"
+fi
+image='postgres@sha256:29ee7bb30d804447dc9a91fd0d74322ae1dc3a4072cc6346f70a5ed6e783b565'
+container_name="sqly-test-${RANDOM}-$$"
+# This digest is the same PostgreSQL 18.4 image used in technical validation.
+# Pulling the fixed image is explicit; never resolve a floating tag here.
+if ! docker image inspect "$image" >/dev/null 2>&1; then
+  docker pull "$image"
+fi
+docker run --detach --rm --pull=never --name "$container_name" \
+  -e POSTGRES_USER=sqly_test -e POSTGRES_PASSWORD=sqly_test \
+  -e POSTGRES_DB=sqly_test -p 127.0.0.1::5432 \
+  --tmpfs /var/lib/postgresql "$image" >/dev/null
+trap 'exit 130' INT
+trap 'exit 143' TERM
+trap 'exit 129' HUP
+trap 'docker stop "$container_name" >/dev/null' EXIT
+for attempt in {1..30}; do
+  if docker exec "$container_name" pg_isready -U sqly_test >/dev/null 2>&1; then break; fi
+  sleep 1
+done
+docker exec "$container_name" pg_isready -U sqly_test >/dev/null
+binding=$(docker port "$container_name" 5432)
+export SQLY_TEST_POSTGRES_URL="postgres://sqly_test:sqly_test@127.0.0.1:${binding##*:}/sqly_test?sslmode=disable"
+"$@"

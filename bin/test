@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cargo_command=(cargo)
+if [[ ${1:-} == +* ]]; then cargo_command+=("$1"); shift; fi
+mode=${SQLY_TEST_BACKEND:-both}
+case "$mode" in
+  sqlite) ;;
+  both)
+    if [[ -z ${SQLY_TEST_POSTGRES_URL:-} ]]; then
+      exec bin/with-test-database "$0" "${cargo_command[@]:1}" "$@"
+    fi
+    ;;
+  *) echo 'SQLY_TEST_BACKEND must be sqlite or both' >&2; exit 2 ;;
+esac
+integrations=uuid,time,json,migrate,ambient
+if [[ $mode == both ]]; then
+  "${cargo_command[@]}" nextest run --locked --all-targets --all-features "$@"
+  "${cargo_command[@]}" nextest run --locked --all-targets --no-default-features --features "postgres,$integrations" "$@"
+fi
+"${cargo_command[@]}" nextest run --locked --all-targets --no-default-features --features "sqlite,$integrations" "$@"
+"${cargo_command[@]}" nextest run --locked --all-targets --no-default-features "$@"
+
+consumer_features=sqlite
+if [[ $mode == both ]]; then consumer_features=sqlite,postgres; fi
+"${cargo_command[@]}" nextest run --locked --manifest-path consumers/warehouse/Cargo.toml --all-targets --no-default-features --features "$consumer_features" "$@"

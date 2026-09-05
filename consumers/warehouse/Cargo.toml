@@ -1,0 +1,20 @@
+[package]
+name = "sqly-warehouse-consumer"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.94"
+publish = false
+
+[workspace]
+
+[features]
+default = []
+sqlite = ["sqly/sqlite"]
+postgres = ["sqly/postgres"]
+
+[dependencies]
+sqly = { path = "../..", default-features = false, features = ["ambient", "migrate"] }
+futures-util = { version = "=0.3.33", default-features = false, features = ["std", "async-await"] }
+
+[dev-dependencies]
+tokio = { version = "=1.53.1", features = ["macros", "rt-multi-thread"] }

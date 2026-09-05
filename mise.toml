@@ -1,0 +1,86 @@
+min_version = "2026.6.11"
+
+[settings]
+lockfile = true
+lockfile_platforms = ["macos-arm64", "linux-x64", "linux-arm64"]
+minimum_release_age = "24h"
+
+[tools]
+"cargo:cargo-nextest" = { version = "0.9.140", locked = true }
+rust = [
+  { version = "1.97.1", profile = "minimal", components = ["clippy"] },
+  { version = "1.94.0", profile = "minimal" },
+  { version = "nightly-2026-04-14", profile = "minimal", components = ["rustfmt"] },
+]
+zizmor = "1.29.0"
+
+[tasks.setup]
+description = "Prepare the pinned Rust style guide"
+run = "bin/style-guides prepare"
+
+[tasks.dev]
+description = "Check the library during development"
+run = "cargo check --locked --all-targets --all-features"
+
+[tasks.fmt]
+description = "Format Rust with the pinned nightly formatter"
+run = ["cargo +nightly-2026-04-14 fmt --all", "cargo +nightly-2026-04-14 fmt --all --manifest-path consumers/warehouse/Cargo.toml"]
+
+[tasks."fmt:check"]
+description = "Check Rust formatting without changing files"
+run = ["cargo +nightly-2026-04-14 fmt --check --all", "cargo +nightly-2026-04-14 fmt --check --all --manifest-path consumers/warehouse/Cargo.toml"]
+
+[tasks.lint]
+description = "Lint all Rust targets with warnings denied"
+env = { CARGO_TARGET_DIR = "{{config_root}}/target/clippy" }
+run = ["cargo clippy --locked --all-targets --all-features -- -D warnings", "cargo clippy --locked --manifest-path consumers/warehouse/Cargo.toml --all-targets --all-features -- -D warnings"]
+
+[tasks.test]
+description = "Run all Rust tests with Nextest"
+run = "bin/test"
+
+[tasks."test:release"]
+description = "Run all Rust tests in release mode"
+run = "bin/test --release"
+
+[tasks."check:msrv"]
+description = "Check all targets with the declared minimum Rust version"
+env = { CARGO_TARGET_DIR = "{{config_root}}/target/msrv" }
+run = "bin/check-features +1.94.0"
+
+[tasks."check:actions"]
+description = "Audit GitHub Actions workflows"
+run = "zizmor .github/workflows"
+
+[tasks."check:whitespace"]
+description = "Check unstaged and staged patches for whitespace errors"
+run = ["git diff --check", "git diff --cached --check"]
+
+[tasks.check]
+description = "Run the complete routine verification gate"
+depends = ["fmt:check", "lint", "test", "test:doc", "check:features", "check:docs", "check:actions", "check:whitespace"]
+
+[tasks."check:nightly"]
+description = "Run the extended nightly verification gate"
+depends = ["check", "check:msrv", "test:release", "check:package"]
+
+[tasks."check:features"]
+description = "Check the default, single-backend, and integration feature builds"
+run = "bin/check-features"
+
+[tasks."test:doc"]
+description = "Test maintained public documentation examples"
+run = "cargo test --locked --doc --all-features"
+
+[tasks."check:docs"]
+description = "Build library documentation with warnings denied"
+env = { RUSTDOCFLAGS = "-D warnings" }
+run = "cargo doc --locked --no-deps --all-features"
+
+[tasks."check:package"]
+description = "Package and verify the unpublished library"
+run = "cargo package --locked --allow-dirty --all-features"
+
+[tasks.release]
+description = "Verify a library release candidate without publishing"
+depends = ["check:nightly"]
