@@ -8,10 +8,12 @@ use crate::{DecodeKind, Error, Result};
 /// ```
 pub trait SqlValue: private::Representation {}
 /// Synchronously convert an application value into an owned SQL representation.
-/// Implementations must not perform database I/O.
+/// Owned values can move their storage; borrowed implementations copy into
+/// owned storage. Implement `Encode` for `&YourType` when callers need borrowed
+/// binding. Implementations must not perform database I/O.
 pub trait Encode {
     type Repr: SqlValue;
-    fn encode(&self) -> Result<Self::Repr>;
+    fn encode(self) -> Result<Self::Repr>;
 }
 /// Convert a built-in representation into an application value.
 pub trait Decode: Sized {
@@ -146,7 +148,11 @@ macro_rules! codec {
         impl SqlValue for $ty {}
         impl Encode for $ty {
             type Repr = Self;
-            fn encode(&self) -> Result<Self> { Ok(self.clone()) }
+            fn encode(self) -> Result<Self> { Ok(self) }
+        }
+        impl Encode for &$ty {
+            type Repr = $ty;
+            fn encode(self) -> Result<$ty> { Ok(self.clone()) }
         }
         impl Decode for $ty {
             type Repr = Self;
@@ -162,27 +168,30 @@ codec!(time::OffsetDateTime);
 #[cfg(feature = "json")]
 codec!(serde_json::Value);
 impl<T: SqlValue> SqlValue for Option<T> {}
-impl Encode for str {
+impl Encode for &str {
     type Repr = String;
-    fn encode(&self) -> Result<String> {
+    fn encode(self) -> Result<String> {
         Ok(self.to_owned())
     }
 }
-impl Encode for [u8] {
+impl Encode for &[u8] {
     type Repr = Vec<u8>;
-    fn encode(&self) -> Result<Vec<u8>> {
+    fn encode(self) -> Result<Vec<u8>> {
         Ok(self.to_owned())
-    }
-}
-impl<T: Encode + ?Sized> Encode for &T {
-    type Repr = T::Repr;
-    fn encode(&self) -> Result<Self::Repr> {
-        T::encode(self)
     }
 }
 impl<T: Encode> Encode for Option<T> {
     type Repr = Option<T::Repr>;
-    fn encode(&self) -> Result<Self::Repr> {
+    fn encode(self) -> Result<Self::Repr> {
+        self.map(Encode::encode).transpose()
+    }
+}
+impl<'a, T> Encode for &'a Option<T>
+where
+    &'a T: Encode,
+{
+    type Repr = Option<<&'a T as Encode>::Repr>;
+    fn encode(self) -> Result<Self::Repr> {
         self.as_ref().map(Encode::encode).transpose()
     }
 }
@@ -190,5 +199,31 @@ impl<T: Decode> Decode for Option<T> {
     type Repr = Option<T::Repr>;
     fn decode(value: Self::Repr) -> Result<Self> {
         value.map(T::decode).transpose()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::Encode;
+
+    #[test]
+    fn owned_encodings_retain_their_allocations() -> crate::Result<()> {
+        let text = String::from("owned text");
+        let text_ptr = text.as_ptr();
+        assert_eq!(text.encode()?.as_ptr(), text_ptr);
+        let bytes = vec![1_u8, 2, 3];
+        let bytes_ptr = bytes.as_ptr();
+        assert_eq!(bytes.encode()?.as_ptr(), bytes_ptr);
+        Ok(())
+    }
+
+    #[test]
+    fn borrowed_optional_values_encode_without_consuming_the_original() -> crate::Result<()> {
+        let text = Some(String::from("borrowed"));
+        assert_eq!((&text).encode()?, text);
+        assert_eq!(text.as_deref(), Some("borrowed"));
+        let absent: Option<String> = None;
+        assert_eq!((&absent).encode()?, None);
+        Ok(())
     }
 }

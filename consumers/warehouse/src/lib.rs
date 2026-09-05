@@ -21,7 +21,13 @@ impl Sku {
 }
 impl Encode for Sku {
     type Repr = String;
-    fn encode(&self) -> Result<String> {
+    fn encode(self) -> Result<String> {
+        Ok(self.0)
+    }
+}
+impl Encode for &Sku {
+    type Repr = String;
+    fn encode(self) -> Result<String> {
         Ok(self.0.clone())
     }
 }

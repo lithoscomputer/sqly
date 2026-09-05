@@ -80,7 +80,8 @@ impl<'a, T> Query<'a, T> {
         query.values = values;
         query
     }
-    /// Convert and copy a parameter now; surface the first failure before I/O.
+    /// Convert a parameter into owned storage now; surface the first failure
+    /// before I/O.
     pub fn bind(mut self, value: impl Encode) -> Self {
         if self.error.is_none() {
             match value

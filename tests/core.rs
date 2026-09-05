@@ -20,7 +20,13 @@ mod behavior {
     struct UserId(i64);
     impl Encode for UserId {
         type Repr = i64;
-        fn encode(&self) -> Result<i64> {
+        fn encode(self) -> Result<i64> {
+            Ok(self.0)
+        }
+    }
+    impl Encode for &UserId {
+        type Repr = i64;
+        fn encode(self) -> Result<i64> {
             Ok(self.0)
         }
     }
@@ -251,7 +257,7 @@ mod behavior {
         struct Invalid;
         impl Encode for Invalid {
             type Repr = String;
-            fn encode(&self) -> Result<String> {
+            fn encode(self) -> Result<String> {
                 Err(Error::encode(io::Error::other("typed cause")))
             }
         }
