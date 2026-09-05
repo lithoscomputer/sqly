@@ -2,6 +2,14 @@
 
 Status: Finalized on 2026-09-05. The eight technical-validation changes are incorporated, and the library implementation and independent-consumer checks are complete. This document remains the first-release interface and acceptance contract. Code examples are design illustrations; README and rustdoc contain maintained usage examples. See the [implementation plan](implementation.md) for current delivery status.
 
+## Accepted pre-adoption refinements
+
+The pre-adoption review was accepted in full. `Encode::encode(self)` consumes owned input, with separate borrowed implementations. `Database::connect` accepts owned and borrowed URL strings as well as `&str` and option types.
+
+`Query<Row>::try_map` and `ReadQuery<Row>::try_map` return `MappedQuery`. The mapper is `FnMut(&Row) -> Result<T>` and can borrow application state. It supports binding, first/optional/all buffered results, and streaming, but has no `execute`. Application mapping runs outside ambient guards. Buffered mapping failures do not abort a transaction; started stream failure ends the cursor and can make the transaction rollback-only. `RowStream` has an additional mapper type parameter with a function-pointer default for ordinary `FromRow` queries.
+
+Both `Transaction` and `ScopedDatabase` expose `require_lock(lock) -> Result<()>`. It returns `LockNotFound` for an absent row and preserves other lock errors. `write_locking` uses the same required-lock contract and does not invoke its closure on absence. Boolean `lock` remains available. Handling a missing required lock does not itself make a transaction rollback-only.
+
 ## Design
 
 sqly is an async Rust library for applications that support SQLite and PostgreSQL. Applications write ordinary SQL, bind ordinary Rust values, and receive their own record types. One concrete `Database` selects the backend at runtime. SQLx stays inside the implementation.
@@ -144,7 +152,7 @@ Encode and Decode are public, unsealed application extension traits in the first
 pub trait Encode {
     type Repr: SqlValue;
 
-    fn encode(&self) -> Result<Self::Repr>;
+    fn encode(self) -> Result<Self::Repr>;
 }
 
 pub trait Decode: Sized {
@@ -162,7 +170,7 @@ struct UserId(Uuid);
 impl sqly::Encode for UserId {
     type Repr = Uuid;
 
-    fn encode(&self) -> sqly::Result<Uuid> {
+    fn encode(self) -> sqly::Result<Uuid> {
         Ok(self.0)
     }
 }
@@ -186,7 +194,9 @@ let id: UserId = row.try_get("id")?;
 
 Binding converts the application value into `Repr`, then sqly applies the backend's built-in binding. Reading performs the reverse: sqly decodes the built-in representation and passes it to the application's `decode` method. A validated text type can use `String` and reject invalid stored values. Neither method receives a connection, backend selector, SQL text, or SQLx type. Custom types cannot change query execution or inject SQL.
 
-Provide implementations for supported built-in types, references used in binding, and `Option<T>` where the representation supports NULL. Thus `bind(&user_id)`, `bind(None::<UserId>)`, and `row.try_get::<Option<UserId>>("id")` work without application boilerplate. NULL binding obtains its backend type from `T::Repr`; it does not call `T::encode` on an absent value. NULL decoding into `Option<T>` returns `None` without calling `T::decode`. Nested optional values do not represent additional SQL NULL states and should not be used to model distinct states.
+Provide implementations for supported built-in types, references used in binding, and `Option<T>` where the representation supports NULL. Optional binding and decoding work once the domain type implements the corresponding trait. `bind(&user_id)` requires an `Encode` implementation for `&UserId`; borrowed built-in types have library-provided implementations. NULL binding obtains its backend type from `T::Repr`; it does not call `T::encode` on an absent value. NULL decoding into `Option<T>` returns `None` without calling `T::decode`. Nested optional values do not represent additional SQL NULL states and should not be used to model distinct states.
+
+Owned `Encode` implementations move their representations into bindings. Implement `Encode` for `&YourType` separately when borrowed binding is needed; borrowed built-in representations copy their storage. `Option<T>` and `&Option<T>` preserve typed NULLs. There is no blanket `Encode for &T` requiring all domain types to clone.
 
 Conversion methods are synchronous and return errors for invalid values. Provide `Error::encode(source)` and `Error::decode_value(source)` constructors for application causes, accepting errors that are `Send + Sync + 'static`. The binding or row layer attaches the parameter index or column name; custom types do not need those details. Preserve the original cause through the standard error source chain. The existing `Error::decode(column, source)` remains useful for validation performed directly inside `FromRow`.
 
@@ -315,6 +325,7 @@ Support additional locks within an existing ambient scope:
 ```rust
 impl ScopedDatabase {
     pub async fn lock(&self, lock: Lock) -> Result<bool>;
+    pub async fn require_lock(&self, lock: Lock) -> Result<()>;
 }
 ```
 
@@ -360,7 +371,7 @@ A successful closure commits; a closure error rolls back and returns the origina
 
 A database error during preparation or execution marks the scope rollback-only on both backends. If the closure catches that error and returns success, scope exit rolls back and returns `TransactionAborted`; it must not commit partial work that SQLite would otherwise permit. Local encoding, scope, and lock-selector validation failures do not poison the scope. A bind-count mismatch found after successful preparation also does not poison it. A driver preparation error is a database error, even though statement execution has not begun. A cancelled in-flight statement also makes the scope rollback-only unless the whole scope is already being dropped.
 
-A panic unwinds normally. Panic or cancellation drops the transaction and starts rollback. Cancellation during COMMIT still has the unknown-outcome limit described above. Scopes never retry the closure. `write_locking` returns `RowNotFound` without entering the closure when the row is absent.
+A panic unwinds normally. Panic or cancellation drops the transaction and starts rollback. Cancellation during COMMIT still has the unknown-outcome limit described above. Scopes never retry the closure. `write_locking` returns `LockNotFound` without entering the closure when the row is absent.
 
 The active scope belongs to one database identity and one task. Cloned handles share identity; separately connected pools do not, even for equal URLs. A mismatched scoped handle fails with `ScopeDatabaseMismatch`, for reads as well as writes. Reject nested entry before attempting acquisition, including entry for a different database. There is no implicit cross-database transaction.
 
@@ -469,4 +480,4 @@ SQLx documents rollback on unfinished transaction drop and shared-pool shutdown.
 
 No unresolved user scope questions remain. Accepted scope includes full Conveyor replacement, static SQL initially, streaming, immediate ActiveStream errors for competing ambient operations, and public Encode/Decode traits over built-in representations. Runtime-generated SQL remains an exception only if full Conveyor replacement requires it.
 
-Technical feasibility and library implementation checks are complete, including the full legacy-ledger validator and transaction/stream cleanup tests. Remaining delivery work includes the CI toolchain setup fix, Conveyor timestamp normalization, full Conveyor replacement, and application acceptance. License and registry-name selection remain separate release decisions.
+Technical feasibility and library implementation checks are complete, including the full legacy-ledger validator and transaction/stream cleanup tests. CI now passes on all three runners. Remaining delivery work includes Conveyor timestamp normalization, full Conveyor replacement, and application acceptance. License and registry-name selection remain separate release decisions.

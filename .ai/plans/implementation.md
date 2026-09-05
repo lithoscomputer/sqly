@@ -1,6 +1,6 @@
 # sqly implementation plan
 
-Status: Updated on 2026-09-05. Milestones 1–5 and the independent consumer checks are complete. The library is pushed to private `lithoscomputer/sqly` at `66da8ee`; the dependency fix passed the full local verification gate. Current CI needs a toolchain setup fix. Full Conveyor replacement and first-release acceptance remain open.
+Status: Updated on 2026-09-05. Milestones 1–5 and the independent consumer checks are complete. The library is pushed to private `lithoscomputer/sqly` at `3f4e52d`; the dependency fix passed the full local verification gate. CI passed on all three runners after the toolchain setup fix. Full Conveyor replacement and first-release acceptance remain open.
 
 ## Outcome and authority
 
@@ -14,7 +14,7 @@ The repository is now a library. Connections, buffered queries, explicit transac
 
 | Milestone | Deliverable | Depends on | Status |
 | --- | --- | --- | --- |
-| 1 | Library structure and verification tasks | Finalized API | Complete; current CI setup follow-up below |
+| 1 | Library structure and verification tasks | Finalized API | Complete; CI passes on all three runners |
 | 2 | Connections, values, and buffered queries | 1 | Complete |
 | 3 | Explicit transactions and row locks | 2 | Complete |
 | 4 | Ambient scopes and streaming | 3 | Complete |
@@ -132,9 +132,9 @@ The highest-risk work is cursor teardown, keeper lifetime, uncertain commit outc
 
 ## Remaining work
 
-[CI for `66da8ee`](https://github.com/lithoscomputer/sqly/actions/runs/33992337297) failed on all three runners because `cargo-clippy` was missing from the installed Rust 1.97.1 toolchain. Fix toolchain component setup and obtain a passing CI run before the Conveyor handoff. The earlier initial-commit CI passed on all three runners.
+[CI for `3f4e52d`](https://github.com/lithoscomputer/sqly/actions/runs/33992978994) passed on macOS, Linux x64, and Linux ARM64. Commit `3f4e52d` resolves the missing-Clippy issue by explicitly ensuring the pinned Rust toolchains and components after the Mise cache restore in all three workflows.
 
-After CI passes, claim the accepted Conveyor WRK-068 through its required workflow and launch Fabro for full replacement. Pin the sqly Git revision and update Conveyor’s own lockfile to select `chacha20 0.10.2` or a later verified fixed version; a Git dependency does not import sqly’s lockfile. Complete timestamp normalization, upgrade/cutover tests, application acceptance, and the removal audit in Conveyor.
+Claim the accepted Conveyor WRK-068 through its required workflow and launch Fabro for full replacement. Pin the sqly Git revision and update Conveyor’s own lockfile to select `chacha20 0.10.2` or a later verified fixed version; a Git dependency does not import sqly’s lockfile. Complete timestamp normalization, upgrade/cutover tests, application acceptance, and the removal audit in Conveyor.
 
 The inherited yanked `chacha20 0.10.1` is resolved in both sqly lockfiles by commit `66da8ee`. Local `mise run check:nightly` passed after the update. See the [delivery review](../reviews/remaining-phases.md) for evidence.
 

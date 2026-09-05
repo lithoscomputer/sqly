@@ -45,6 +45,9 @@ pub struct RowStream<'a, T, F = fn(&Row) -> Result<T>> {
     marker: PhantomData<fn() -> T>,
 }
 impl<'a, T: FromRow> Query<'a, T> {
+    /// Begin an incremental query on first poll. The first database or mapping
+    /// error ends the stream. Early drop conservatively aborts an explicit or
+    /// ambient transaction. See `RowStream` for borrowing and cleanup behavior.
     pub fn fetch(self) -> RowStream<'a, T> {
         RowStream::mapped(self, T::from_row as fn(&Row) -> Result<T>)
     }

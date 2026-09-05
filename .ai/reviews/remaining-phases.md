@@ -1,6 +1,6 @@
 # Remaining implementation phases
 
-Status: Updated on 2026-09-05. Library implementation and independent-consumer verification are complete. Code is pushed to private `lithoscomputer/sqly` at `66da8ee`, including the fixed chacha20 dependency. Local extended verification passed. Current CI has a toolchain setup failure. Full Conveyor replacement has not started its required Fabro run.
+Status: Updated on 2026-09-05. Library implementation and independent-consumer verification are complete. Code is pushed to private `lithoscomputer/sqly` at `3f4e52d`, including the fixed chacha20 dependency. Local extended verification passed. CI passed on all three runners after the toolchain setup fix. Full Conveyor replacement has not started its required Fabro run.
 
 ## Delivered
 
@@ -46,7 +46,7 @@ The original implementation used dependency versions from the validated sqly loc
 
 Initial implementation commit `628bee8` and dependency fix `66da8ee` are pushed to private [lithoscomputer/sqly](https://github.com/lithoscomputer/sqly). The dependency fix passed `CARGO_NET_OFFLINE=true mise run check:nightly`, including debug/release database tests, the independent consumer, feature/MSRV checks, documentation, lint, and package verification. The yanked-package warning is gone. See [dependency-fix verification](evidence/chacha20-update-check.log).
 
-[CI for `66da8ee`](https://github.com/lithoscomputer/sqly/actions/runs/33992337297) failed on all three runners because `cargo-clippy` was missing from the installed Rust 1.97.1 toolchain. Fix toolchain component setup and obtain a passing CI run before the Conveyor handoff. The earlier initial-commit CI passed on all three runners. See [failed CI evidence](evidence/chacha20-update-ci-failure.log). This CI failure is not a passing verification result for the pushed revision.
+[CI for `3f4e52d`](https://github.com/lithoscomputer/sqly/actions/runs/33992978994) passed on macOS, Linux x64, and Linux ARM64. Commit `3f4e52d` resolves the missing-Clippy issue by explicitly ensuring the pinned Rust toolchains and components after the Mise cache restore in all three workflows. The earlier [failed CI evidence](evidence/chacha20-update-ci-failure.log) is retained as historical evidence; the toolchain setup issue is resolved.
 
 ## Conveyor workflow and remaining acceptance
 

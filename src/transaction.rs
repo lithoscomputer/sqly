@@ -128,6 +128,7 @@ impl Transaction {
         }
     }
     /// Commit all changes. Transport failures return `CommitUnknown`.
+    /// Cancellation during COMMIT can also leave the outcome unknown.
     /// A rollback-only transaction rolls back and returns `TransactionAborted`.
     pub async fn commit(mut self) -> Result<()> {
         if self.aborted {
@@ -139,6 +140,8 @@ impl Transaction {
         self.finished = true;
         Ok(())
     }
+    /// Roll back and consume the transaction. Dropping an unfinished rollback
+    /// discards its connection; cancellation must not be treated as completion.
     pub async fn rollback(mut self) -> Result<()> {
         self.control("ROLLBACK").await.map_err(driver_error)?;
         self.finished = true;

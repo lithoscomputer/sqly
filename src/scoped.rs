@@ -113,37 +113,64 @@ impl<T> ReadQuery<'_, T> {
     }
 }
 impl<'a, T: FromRow> ReadQuery<'a, T> {
+    /// Stream rows on first poll. Early drop can make the scope rollback-only;
+    /// a live ambient stream rejects competing operations with `ActiveStream`.
     pub fn fetch(self) -> RowStream<'a, T> {
         self.0.fetch()
     }
+    /// Return the first row or `RowNotFound`; does not check uniqueness.
+    /// Scope membership resolves when awaited. See `ScopedDatabase::read`.
     pub async fn fetch_one(self) -> Result<T> {
         self.0.fetch_one().await
     }
+    /// Return the first row or None; additional rows are ignored.
+    /// Scope membership resolves when awaited. See `ScopedDatabase::read`.
     pub async fn fetch_optional(self) -> Result<Option<T>> {
         self.0.fetch_optional().await
     }
+    /// Buffer all rows. Callers must bound result size. Local conversion errors
+    /// do not abort the scope; database failures do.
     pub async fn fetch_all(self) -> Result<Vec<T>> {
         self.0.fetch_all().await
     }
 }
 impl Database {
+    /// Create a cloned ambient handle. Give stores this handle to keep
+    /// transaction parameters out of their method signatures.
     pub fn scoped(&self) -> ScopedDatabase {
         ScopedDatabase { db: self.clone() }
     }
 }
 impl ScopedDatabase {
+    /// Build a query that requires a matching active write scope at execution,
+    /// including for SELECT. Builders do not capture scope membership.
     pub fn query(&self, sql: impl Into<Sql>) -> Query<'_, Row> {
         self.query_as(sql)
     }
+    /// Build a typed query with the same scope requirements as `Self::query`.
     pub fn query_as<T: FromRow>(&self, sql: impl Into<Sql>) -> Query<'_, T> {
         Query::scoped(self, sql.into(), false)
     }
+    /// Build caller-declared read-only SQL. At execution this joins a matching
+    /// scope, or uses the pool outside one. Sqly does not inspect SQL.
     pub fn read(&self, sql: impl Into<Sql>) -> ReadQuery<'_, Row> {
         self.read_as(sql)
     }
+    /// Build a typed read with the same scope behavior as `Self::read`.
     pub fn read_as<T: FromRow>(&self, sql: impl Into<Sql>) -> ReadQuery<'_, T> {
         ReadQuery(Query::scoped(self, sql.into(), true))
     }
+    /// Run application work atomically, committing on success and rolling back
+    /// on error, panic, or cancellation. Application errors retain precedence
+    /// if rollback also fails. Caught database errors make the scope
+    /// rollback-only.
+    ///
+    /// Nested scopes fail before acquisition. Spawned tasks inherit no scope.
+    /// Concurrent buffered operations in one task serialize. An active stream
+    /// rejects competitors with `ActiveStream`; successful return with an
+    /// active stream invalidates it and rolls back. Early stream drop
+    /// aborts the scope. Cancellation during COMMIT can leave its outcome
+    /// unknown. Never retries.
     pub async fn write<T, E, F, Fut>(&self, f: F) -> result::Result<T, E>
     where
         F: FnOnce() -> Fut,
@@ -152,6 +179,9 @@ impl ScopedDatabase {
     {
         self.enter(None, f).await
     }
+    /// Acquire a required owner-row lock before invoking application work.
+    /// A missing row returns `LockNotFound` without invoking the closure.
+    /// All other lifecycle and cancellation behavior follows `Self::write`.
     pub async fn write_locking<T, E, F, Fut>(&self, lock: Lock, f: F) -> result::Result<T, E>
     where
         F: FnOnce() -> Fut,
@@ -242,6 +272,9 @@ impl ScopedDatabase {
             Err(Error::LockNotFound)
         }
     }
+    /// Acquire a row lock in the active scope, returning false if absent.
+    /// Acquisition can wait. Read dependent rows after acquiring their owner.
+    /// Without a scope this returns `NoActiveWriteScope`.
     pub async fn lock(&self, lock: Lock) -> Result<bool> {
         let scope = self.active()?.ok_or(Error::NoActiveWriteScope)?;
         let slot = scope.transaction.clone();

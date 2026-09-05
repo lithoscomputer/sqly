@@ -25,7 +25,20 @@ async fn example() -> sqly::Result<()> {
 }
 ```
 
-`query_as::<T>` maps rows through your `FromRow` implementation. Implement `Encode` and `Decode` to map domain types to built-in representations. Bindings are owned; borrowed strings and byte slices are copied when bound.
+`query_as::<T>` maps rows through your `FromRow` implementation. Implement `Encode` and `Decode` to map domain types to built-in representations. Bindings are owned. `Encode::encode(self)` moves owned representations into the query; borrowed strings and byte slices are copied when bound. Application types can implement `Encode` separately for their owned and borrowed forms.
+
+For counts and one-off projections, use a fallible mapper. It works with buffered results and streams, and the closure can borrow application state:
+
+```rust
+async fn example(db: &sqly::Database) -> sqly::Result<()> {
+let count: i64 = db.query("SELECT COUNT(*) AS count FROM users")
+    .try_map(|row| row.try_get::<i64>("count"))
+    .fetch_one().await?;
+    Ok(())
+}
+```
+
+`fetch_one` returns the first row or `RowNotFound`; `fetch_optional` returns the first row or `None`. Neither checks uniqueness. `try_map` is also available on `ScopedDatabase::read`; mapped queries have no `execute` method. Mapping errors follow the same buffered and streaming cleanup rules as `FromRow` errors.
 
 SQL must be static and contain one statement. Use `$1` through `$N`, in numeric binding order, with every number present. References may repeat or appear out of order. Use `Sql::dialects(sqlite, postgres)` for a declared dialect difference. Sqly trusts application SQL and does not tokenize, rewrite, or police statements. Parameter count checks require preparation I/O. PostgreSQL preparation includes additional type-hint probes to reject unused trailing bindings. `BindCount` reports an unknown expected count when the server cannot infer a missing parameter's type.
 
@@ -51,7 +64,7 @@ async fn rename(db: &Database, id: i64, name: &str) -> sqly::Result<bool> {
 
 `begin_write` returns an owned transaction. Queries borrow it mutably, so simultaneous queries through one transaction do not compile. SQLite starts with `BEGIN IMMEDIATE`; PostgreSQL uses READ COMMITTED. Queries through `Database` still use the pool.
 
-Locks select an existing primary or unique key. Repeated `key` calls support composite keys. Missing rows return `false`; multiple matches return `NonUniqueLock`. Identifiers must be simple ASCII names of at most 63 bytes. Empty selectors, duplicate columns, and NULL keys fail before I/O. PostgreSQL uses a separate `SELECT ... FOR UPDATE`; SQLite checks existence while holding its writer reservation. Read dependent rows after acquiring the lock. Acquire multiple locks in a consistent order. Missing PostgreSQL rows are not locked.
+Locks select an existing primary or unique key. Repeated `key` calls support composite keys. Missing rows return `false`; multiple matches return `NonUniqueLock`. Use `require_lock` on a transaction or ambient handle to require a row and return `LockNotFound` if absent. A handled missing-row error alone does not abort the transaction. Identifiers must be simple ASCII names of at most 63 bytes. Empty selectors, duplicate columns, and NULL keys fail before I/O. PostgreSQL uses a separate `SELECT ... FOR UPDATE`; SQLite checks existence while holding its writer reservation. Read dependent rows after acquiring the lock. Acquire multiple locks in a consistent order. Missing PostgreSQL rows are not locked.
 
 `commit` and `rollback` consume the transaction. Dropping an unfinished transaction discards its connection; connection closure rolls back the work. A database error or cancelled operation makes the transaction rollback-only. Subsequent queries return `TransactionAborted`; committing that state rolls back and returns the same error. Local encoding, selector validation, bind-count, and buffered row-conversion errors do not abort it. PostgreSQL preparation probes use an internal savepoint to preserve this behavior.
 
@@ -72,6 +85,8 @@ async fn change_name(db: &sqly::ScopedDatabase, id: i64, name: &str) -> sqly::Re
     }).await
 }
 ```
+
+`write_locking` returns `LockNotFound` without invoking the closure when its owner row is absent.
 
 `write` and `write_locking` commit on closure success and roll back on error, panic, or cancellation. Application errors are preserved if rollback also fails. Caught database failures make the scope rollback-only. Nested scopes fail before acquisition. Separately connected databases cannot join one scope; clones share identity.
 
@@ -97,7 +112,7 @@ The `_sqly_migrations` ledger keys rows by namespace and version. A pending batc
 
 ## Connections
 
-Use a database URL or explicit `SqliteOptions` / `PostgresOptions`. `Database::builder()` configures pool size and acquisition timeout. Defaults are five connections and a 30-second acquisition timeout. Managed in-memory SQLite uses one query connection and a separate private keeper so connection replacement does not erase committed data. `ConnectOptions::as_sqlite` and `as_postgres` expose the sqly-owned settings. `SqliteOptions::filename` returns a file path, or `None` for in-memory storage, so applications can apply their own directory policy.
+Use a database URL (`&str`, `String`, or `&String`) or explicit `SqliteOptions` / `PostgresOptions`. `Database::builder()` configures pool size and acquisition timeout. Defaults are five connections and a 30-second acquisition timeout. Managed in-memory SQLite uses one query connection and a separate private keeper so connection replacement does not erase committed data. `ConnectOptions::as_sqlite` and `as_postgres` expose the sqly-owned settings. `SqliteOptions::filename` returns a file path, or `None` for in-memory storage, so applications can apply their own directory policy.
 
 SQLite foreign keys are enabled. File creation, read-only mode, and WAL are explicit options. URLs support `mode=ro|rw|rwc|memory`; use option methods for WAL and busy timeout. `SqliteOptions::new(path)` accepts plain file paths; use `in_memory()` for isolated memory databases.
 

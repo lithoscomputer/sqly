@@ -133,6 +133,9 @@ impl<'a, T> Query<'a, T> {
     }
 }
 impl<T: FromRow> Query<'_, T> {
+    /// Return the first row, or None when empty. Additional rows are ignored;
+    /// this does not check uniqueness. Execution begins when awaited.
+    /// Buffered conversion errors do not make a transaction rollback-only.
     pub async fn fetch_optional(self) -> Result<Option<T>> {
         self.run(Mode::Optional)
             .await?
@@ -141,9 +144,13 @@ impl<T: FromRow> Query<'_, T> {
             .map(T::from_row)
             .transpose()
     }
+    /// Return the first row, or `RowNotFound` when empty. Additional rows are
+    /// ignored; this is not an exactly-one-row assertion. See `fetch_optional`.
     pub async fn fetch_one(self) -> Result<T> {
         self.fetch_optional().await?.ok_or(Error::RowNotFound)
     }
+    /// Buffer and convert all rows. Callers must bound the result size.
+    /// Conversion stops at the first failure without aborting the transaction.
     pub async fn fetch_all(self) -> Result<Vec<T>> {
         self.run(Mode::All)
             .await?
@@ -154,6 +161,10 @@ impl<T: FromRow> Query<'_, T> {
     }
 }
 impl Query<'_, Row> {
+    /// Execute when awaited and return affected-row metadata. An ambient query
+    /// requires an active scope even when the SQL is SELECT. Database failures
+    /// or cancellation make a transaction rollback-only; local encoding and
+    /// bind-count errors do not. No automatic retry is performed.
     pub async fn execute(self) -> Result<ExecuteResult> {
         Ok(ExecuteResult {
             affected: self.run(Mode::Execute).await?.affected,
