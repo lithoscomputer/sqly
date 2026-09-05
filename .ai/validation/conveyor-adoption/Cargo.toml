@@ -1,0 +1,12 @@
+[package]
+name = "sqly-conveyor-adoption-probe"
+version = "0.0.0"
+edition = "2024"
+rust-version = "1.94"
+publish = false
+[workspace]
+[dependencies]
+sqly = { path = "../../..", features = ["sqlite", "postgres", "migrate"] }
+persistence = { path = "/tmp/sqly-conveyor-integration/crates/components/persistence", features = ["sqlite", "postgres"] }
+schema = { path = "/tmp/sqly-conveyor-integration/crates/schema" }
+tokio = { version = "=1.53.1", features = ["macros", "rt-multi-thread"] }

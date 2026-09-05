@@ -1,0 +1,344 @@
+[check:msrv] $ bin/check-features +1.94.0
+[check:package] $ cargo package --locked --allow-dirty --all-features
+[lint] $ cargo clippy --locked --all-targets --all-features -- -D warnings
+[test] $ bin/test
+[test:doc] $ cargo test --locked --doc --all-features
+[check:features] $ bin/check-features
+[fmt:check] $ cargo +nightly-2026-04-14 fmt --check --all
+[test:release] $ bin/test --release
+[check:msrv]     Blocking waiting for file lock on package cache
+[test:doc]     Blocking waiting for file lock on package cache
+[lint]     Blocking waiting for file lock on package cache
+[check:package] warning: manifest has no license, license-file, documentation, homepage or repository
+[check:package]   |
+[check:package]   = note: see https://doc.rust-lang.org/cargo/reference/manifest.html#package-metadata for more info
+[check:features]     Blocking waiting for file lock on package cache
+[check:package]    Packaging sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[check:package]     Blocking waiting for file lock on package cache
+[check:msrv]     Blocking waiting for file lock on package cache
+[fmt:check] Finished in 185.8ms
+[check:docs] $ cargo doc --locked --no-deps --all-features
+[test:doc]     Blocking waiting for file lock on package cache
+[lint]     Blocking waiting for file lock on package cache
+[check:features]     Blocking waiting for file lock on package cache
+[check:docs]     Blocking waiting for file lock on package cache
+[check:package]     Blocking waiting for file lock on package cache
+[check:msrv]     Blocking waiting for file lock on package cache
+[test:doc]     Blocking waiting for file lock on package cache
+[lint]     Blocking waiting for file lock on package cache
+[check:features]     Blocking waiting for file lock on package cache
+[check:package] warning: package `chacha20 v0.10.1` in Cargo.lock is yanked in registry `crates-io`, consider updating to a version that is not yanked
+[check:docs]     Blocking waiting for file lock on package cache
+[check:package]     Packaged 22 files, 183.0KiB (42.8KiB compressed)
+[check:package]    Verifying sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[check:package]     Blocking waiting for file lock on package cache
+[test:doc]     Blocking waiting for file lock on package cache
+[check:msrv]     Checking sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[lint]     Blocking waiting for file lock on package cache
+[check:msrv]     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.59s
+[check:features]     Blocking waiting for file lock on package cache
+[check:docs]     Blocking waiting for file lock on package cache
+[check:msrv]     Blocking waiting for file lock on package cache
+[check:package]     Blocking waiting for file lock on package cache
+[check:features]     Blocking waiting for file lock on build directory
+[check:docs]     Blocking waiting for file lock on package cache
+[test:doc]     Finished `test` profile [unoptimized + debuginfo] target(s) in 0.78s
+[test:doc]    Doc-tests sqly
+[check:msrv]     Blocking waiting for file lock on package cache
+[check:features]     Checking sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[check:docs]     Blocking waiting for file lock on build directory
+[check:package]     Blocking waiting for file lock on build directory
+[lint]     Checking sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[check:msrv]     Checking sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[check:msrv]     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.40s
+[check:features]     Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.08s
+[check:features]     Blocking waiting for file lock on package cache
+[check:package]    Compiling sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly/target/package/sqly-0.1.0)
+[check:msrv]     Blocking waiting for file lock on package cache
+[check:features]     Blocking waiting for file lock on package cache
+[check:msrv]     Blocking waiting for file lock on package cache
+[check:features]     Blocking waiting for file lock on build directory
+[check:msrv]     Checking sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[lint]     Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.38s
+[lint] Finished in 1.51s
+[check:actions] $ zizmor .github/workflows
+[check:actions]  INFO zizmor: 🌈 zizmor v1.29.0
+[check:actions]  WARN audit: zizmor: zizmor is running in offline mode by default; some audits and auto-fixes will not be available. see https://docs.zizmor.sh/usage/#operating-modes for details
+[check:actions]  INFO audit: zizmor: 🌈 completed .github/workflows/nightly.yml
+[check:actions]  INFO audit: zizmor: 🌈 completed .github/workflows/release.yml
+[check:actions]  INFO audit: zizmor: 🌈 completed .github/workflows/routine.yml
+[check:actions] No findings to report. Good job!
+[check:actions] Finished in 86.8ms
+[check:whitespace] $ git diff --check
+[check:whitespace] $ git diff --cached --check
+[check:whitespace] Finished in 82.2ms
+[check:msrv]     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.96s
+[test:doc] 
+[test:doc] running 2 tests
+[test:doc] test src/lib.rs - (line 7) - compile ... ok
+[test:doc] test src/transaction.rs - transaction::Transaction (line 24) - compile ... ok
+[test:doc] 
+[test:doc] test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+[test:doc] 
+[test:doc] 
+[test:doc] running 2 tests
+[test:doc] test src/value.rs - value::SqlValue (line 5) - compile fail ... ok
+[test:doc] test src/transaction.rs - transaction::Transaction (line 40) - compile fail ... ok
+[test:doc] 
+[test:doc] test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.31s
+[test:doc] 
+[test:doc] all doctests ran in 1.25s; merged doctests compilation took 0.94s
+[test:doc] Finished in 2.52s
+[check:msrv]     Checking sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[check:package]     Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.51s
+[check:package] Finished in 2.59s
+[check:docs]  Documenting sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[check:msrv]     Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.17s
+[check:msrv]     Checking sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[test:release]    Compiling sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[check:docs]     Finished `dev` profile [unoptimized + debuginfo] target(s) in 4.12s
+[check:docs]    Generated /Users/bhelmkamp/p/lithoscomputer/sqly/target/doc/sqly/index.html
+[check:docs] Finished in 4.20s
+[check:features]     Checking sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[test]     Blocking waiting for file lock on build directory
+[check:features]     Finished `dev` profile [unoptimized + debuginfo] target(s) in 3.31s
+[check:msrv]     Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.18s
+[test]    Compiling sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[check:msrv]     Blocking waiting for file lock on package cache
+[check:features]     Blocking waiting for file lock on package cache
+[check:msrv]     Blocking waiting for file lock on package cache
+[check:features]     Blocking waiting for file lock on package cache
+[check:msrv]     Blocking waiting for file lock on package cache
+[check:features]     Blocking waiting for file lock on package cache
+[check:features]     Blocking waiting for file lock on build directory
+[check:msrv]     Checking sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[check:msrv]     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.66s
+[check:msrv]     Checking sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[check:msrv]     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.97s
+[check:msrv]     Checking sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[check:msrv]     Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.63s
+[check:msrv]     Checking sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[check:msrv]     Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.54s
+[check:msrv] Finished in 9.67s
+[test]     Finished `test` profile [unoptimized + debuginfo] target(s) in 6.49s
+[test] ────────────
+[test]  Nextest run ID 0675c39a-4aee-4849-8ac2-46c4c704e159 with nextest profile: default
+[test]     Starting 31 tests across 7 binaries
+[test]         PASS [   0.024s] ( 1/31) sqly::postgres_lifecycle ambient_settings_child
+[test]         PASS [   0.028s] ( 2/31) sqly::core configuration_rejects_unknown_duplicate_and_invalid_options_without_echoing_credentials
+[test]         PASS [   0.032s] ( 3/31) sqly database::tests::keeper_loss_is_terminal
+[test]         PASS [   0.035s] ( 4/31) sqly::postgres_lifecycle ambient_settings_are_rejected_in_an_isolated_process
+[test]         PASS [   0.038s] ( 5/31) sqly::core behavior::sqlite::optional_value_integrations
+[test]         PASS [   0.039s] ( 6/31) sqly database::tests::cancelled_statement_replaces_connection_without_losing_data
+[test]         PASS [   0.038s] ( 7/31) sqly::core memory_instances_are_isolated_and_require_one_query_connection
+[test]         PASS [   0.042s] ( 8/31) sqly::core behavior::sqlite::row_and_encoding_errors
+[test]         PASS [   0.049s] ( 9/31) sqly::core behavior::sqlite::parameter_contract
+[test]         PASS [   0.057s] (10/31) sqly database::tests::transaction_retains_keeper_after_cancelled_shutdown_and_last_handle_drop
+[test]         PASS [   0.058s] (11/31) sqly database::tests::keeper_preserves_data_after_query_connection_replacement
+[test]         PASS [   0.029s] (12/31) sqly::postgres_lifecycle tls_does_not_silently_fall_back_to_plaintext
+[test]         PASS [   0.058s] (13/31) sqly database::tests::active_transaction_rejects_keeper_loss
+[test]         PASS [   0.063s] (14/31) sqly::core behavior::sqlite::crud_and_constraints
+[test]         PASS [   0.017s] (15/31) sqly::transactions lock_debug_redacts_names_and_values
+[test]         PASS [   0.030s] (16/31) sqly::sqlite_storage invalid_sqlite_boolean_is_a_decode_error
+[test]         PASS [   0.031s] (17/31) sqly::sqlite_storage timestamp_storage_is_fixed_width_and_orders_instants
+[test]         PASS [   0.074s] (18/31) sqly database::tests::cancelled_close_retains_keeper_until_pool_is_drained
+[check:features]     Checking sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[test]         PASS [   0.041s] (19/31) sqly::sqlite_storage file_creation_wal_and_read_only_are_explicit
+[test]         PASS [   0.027s] (20/31) sqly::transactions sqlite_deferred_commit_failure
+[test]         PASS [   0.161s] (21/31) sqly::sqlite_transactions begin_immediate_serializes_writers_and_cancelled_begin_releases_its_connection
+[test]         PASS [   0.196s] (22/31) sqly::transactions sqlite_transaction_contract
+[test]         PASS [   0.343s] (23/31) sqly::core behavior::postgres::optional_value_integrations
+[test]         PASS [   0.344s] (24/31) sqly::core behavior::postgres::row_and_encoding_errors
+[test]         PASS [   0.349s] (25/31) sqly::core behavior::postgres::parameter_contract
+[test]         PASS [   0.347s] (26/31) sqly::transactions postgres_deferred_commit_failure
+[test]         PASS [   0.525s] (27/31) sqly::postgres_lifecycle cancellation_discards_the_busy_connection_and_allows_reuse
+[test]         PASS [   0.673s] (28/31) sqly::postgres_transactions lost_acknowledgement_and_cancelled_commit_can_accompany_committed_writes
+[test]         PASS [   0.815s] (29/31) sqly::postgres_transactions dependent_read_sees_the_revision_committed_by_the_lock_holder
+[test]         PASS [   0.830s] (30/31) sqly::transactions postgres_transaction_contract
+[test]         PASS [   1.308s] (31/31) sqly::core behavior::postgres::crud_and_constraints
+[test] ────────────
+[test]      Summary [   1.309s] 31 tests run: 31 passed, 0 skipped
+[check:features]     Finished `dev` profile [unoptimized + debuginfo] target(s) in 7.70s
+[check:features]     Blocking waiting for file lock on package cache
+[test]     Blocking waiting for file lock on package cache
+[check:features]     Blocking waiting for file lock on package cache
+[test]     Blocking waiting for file lock on package cache
+[check:features]     Blocking waiting for file lock on package cache
+[check:features]     Checking sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[test]     Blocking waiting for file lock on build directory
+[check:features]     Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.32s
+[test]    Compiling sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[check:features]     Blocking waiting for file lock on build directory
+[test]     Finished `test` profile [unoptimized + debuginfo] target(s) in 10.28s
+[test] ────────────
+[test]  Nextest run ID f391da80-6b68-4029-b9e3-d3a42e46e952 with nextest profile: default
+[test]     Starting 15 tests across 7 binaries
+[test]         PASS [   0.021s] ( 1/15) sqly::transactions lock_debug_redacts_names_and_values
+[test]         PASS [   0.022s] ( 2/15) sqly::postgres_lifecycle ambient_settings_child
+[test]         PASS [   0.022s] ( 3/15) sqly::core disabled_sqlite_fails_before_connection
+[test]         PASS [   0.023s] ( 4/15) sqly::core configuration_rejects_unknown_duplicate_and_invalid_options_without_echoing_credentials
+[test]         PASS [   0.027s] ( 5/15) sqly::postgres_lifecycle tls_does_not_silently_fall_back_to_plaintext
+[test]         PASS [   0.031s] ( 6/15) sqly::postgres_lifecycle ambient_settings_are_rejected_in_an_isolated_process
+[check:features]     Checking sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[test]         PASS [   0.222s] ( 7/15) sqly::core behavior::postgres::optional_value_integrations
+[test]         PASS [   0.224s] ( 8/15) sqly::core behavior::postgres::parameter_contract
+[test]         PASS [   0.406s] ( 9/15) sqly::transactions postgres_deferred_commit_failure
+[test]         PASS [   0.407s] (10/15) sqly::core behavior::postgres::row_and_encoding_errors
+[test]         PASS [   0.591s] (11/15) sqly::postgres_lifecycle cancellation_discards_the_busy_connection_and_allows_reuse
+[test]         PASS [   0.787s] (12/15) sqly::postgres_transactions dependent_read_sees_the_revision_committed_by_the_lock_holder
+[test]         PASS [   0.810s] (13/15) sqly::postgres_transactions lost_acknowledgement_and_cancelled_commit_can_accompany_committed_writes
+[test]         PASS [   0.946s] (14/15) sqly::transactions postgres_transaction_contract
+[test]         PASS [   1.241s] (15/15) sqly::core behavior::postgres::crud_and_constraints
+[test] ────────────
+[test]      Summary [   1.241s] 15 tests run: 15 passed, 0 skipped
+[test]     Blocking waiting for file lock on build directory
+[check:features]     Finished `dev` profile [unoptimized + debuginfo] target(s) in 10.31s
+[check:features]     Blocking waiting for file lock on package cache
+[test]    Compiling sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[check:features]     Blocking waiting for file lock on build directory
+[test]     Finished `test` profile [unoptimized + debuginfo] target(s) in 5.32s
+[test] ────────────
+[test]  Nextest run ID 1e4f10ac-8b14-4585-9fb0-c249aa0c82d0 with nextest profile: default
+[test]     Starting 20 tests across 7 binaries
+[test]         PASS [   0.023s] ( 1/20) sqly::core configuration_rejects_unknown_duplicate_and_invalid_options_without_echoing_credentials
+[test]         PASS [   0.025s] ( 2/20) sqly::transactions lock_debug_redacts_names_and_values
+[test]         PASS [   0.031s] ( 3/20) sqly database::tests::keeper_loss_is_terminal
+[test]         PASS [   0.031s] ( 4/20) sqly database::tests::active_transaction_rejects_keeper_loss
+[test]         PASS [   0.031s] ( 5/20) sqly::core disabled_postgres_fails_before_connection
+[test]         PASS [   0.033s] ( 6/20) sqly::sqlite_storage invalid_sqlite_boolean_is_a_decode_error
+[test]         PASS [   0.033s] ( 7/20) sqly::core memory_instances_are_isolated_and_require_one_query_connection
+[test]         PASS [   0.034s] ( 8/20) sqly database::tests::cancelled_statement_replaces_connection_without_losing_data
+[test]         PASS [   0.034s] ( 9/20) sqly::core behavior::sqlite::optional_value_integrations
+[test]         PASS [   0.036s] (10/20) sqly::sqlite_storage timestamp_storage_is_fixed_width_and_orders_instants
+[test]         PASS [   0.036s] (11/20) sqly::core behavior::sqlite::row_and_encoding_errors
+[test]         PASS [   0.036s] (12/20) sqly database::tests::keeper_preserves_data_after_query_connection_replacement
+[test]         PASS [   0.037s] (13/20) sqly::core behavior::sqlite::parameter_contract
+[test]         PASS [   0.041s] (14/20) sqly::sqlite_storage file_creation_wal_and_read_only_are_explicit
+[test]         PASS [   0.041s] (15/20) sqly::core behavior::sqlite::crud_and_constraints
+[check:features]     Checking sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[test]         PASS [   0.024s] (16/20) sqly::transactions sqlite_deferred_commit_failure
+[test]         PASS [   0.052s] (17/20) sqly database::tests::transaction_retains_keeper_after_cancelled_shutdown_and_last_handle_drop
+[test]         PASS [   0.076s] (18/20) sqly database::tests::cancelled_close_retains_keeper_until_pool_is_drained
+[test]         PASS [   0.165s] (19/20) sqly::sqlite_transactions begin_immediate_serializes_writers_and_cancelled_begin_releases_its_connection
+[test]         PASS [   0.140s] (20/20) sqly::transactions sqlite_transaction_contract
+[test] ────────────
+[test]      Summary [   0.167s] 20 tests run: 20 passed, 0 skipped
+[test]     Blocking waiting for file lock on build directory
+[check:features]     Finished `dev` profile [unoptimized + debuginfo] target(s) in 5.99s
+[test]    Compiling sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[check:features]     Blocking waiting for file lock on build directory
+[test]     Finished `test` profile [unoptimized + debuginfo] target(s) in 2.10s
+[test] ────────────
+[test]  Nextest run ID da9254f1-a12f-41cf-bac0-c77ecb96fba1 with nextest profile: default
+[test]     Starting 3 tests across 7 binaries
+[test]         PASS [   0.016s] (1/3) sqly::core disabled_sqlite_fails_before_connection
+[test]         PASS [   0.016s] (2/3) sqly::core disabled_postgres_fails_before_connection
+[test]         PASS [   0.016s] (3/3) sqly::core configuration_rejects_unknown_duplicate_and_invalid_options_without_echoing_credentials
+[test] ────────────
+[test]      Summary [   0.017s] 3 tests run: 3 passed, 0 skipped
+[check:features]     Checking sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[test] Finished in 33.90s
+[check:features]     Finished `dev` profile [unoptimized + debuginfo] target(s) in 3.45s
+[check:features]     Checking sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[check:features]     Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.67s
+[check:features]     Checking sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[check:features]     Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.24s
+[check:features] Finished in 38.68s
+[test:release]     Finished `release` profile [optimized] target(s) in 46.87s
+[test:release] ────────────
+[test:release]  Nextest run ID 3ff358bc-e324-430c-9419-e2c5b03de486 with nextest profile: default
+[test:release]     Starting 31 tests across 7 binaries
+[test:release]         PASS [   0.027s] ( 1/31) sqly::core configuration_rejects_unknown_duplicate_and_invalid_options_without_echoing_credentials
+[test:release]         PASS [   0.033s] ( 2/31) sqly::postgres_lifecycle ambient_settings_are_rejected_in_an_isolated_process
+[test:release]         PASS [   0.033s] ( 3/31) sqly database::tests::active_transaction_rejects_keeper_loss
+[test:release]         PASS [   0.033s] ( 4/31) sqly database::tests::keeper_loss_is_terminal
+[test:release]         PASS [   0.035s] ( 5/31) sqly::core memory_instances_are_isolated_and_require_one_query_connection
+[test:release]         PASS [   0.036s] ( 6/31) sqly::core behavior::sqlite::optional_value_integrations
+[test:release]         PASS [   0.036s] ( 7/31) sqly database::tests::cancelled_statement_replaces_connection_without_losing_data
+[test:release]         PASS [   0.036s] ( 8/31) sqly database::tests::keeper_preserves_data_after_query_connection_replacement
+[test:release]         PASS [   0.037s] ( 9/31) sqly::core behavior::sqlite::row_and_encoding_errors
+[test:release]         PASS [   0.038s] (10/31) sqly::core behavior::sqlite::parameter_contract
+[test:release]         PASS [   0.022s] (11/31) sqly::postgres_lifecycle tls_does_not_silently_fall_back_to_plaintext
+[test:release]         PASS [   0.020s] (12/31) sqly::transactions lock_debug_redacts_names_and_values
+[test:release]         PASS [   0.027s] (13/31) sqly::sqlite_storage invalid_sqlite_boolean_is_a_decode_error
+[test:release]         PASS [   0.064s] (14/31) sqly::core behavior::sqlite::crud_and_constraints
+[test:release]         PASS [   0.063s] (15/31) sqly database::tests::transaction_retains_keeper_after_cancelled_shutdown_and_last_handle_drop
+[test:release]         PASS [   0.030s] (16/31) sqly::sqlite_storage timestamp_storage_is_fixed_width_and_orders_instants
+[test:release]         PASS [   0.040s] (17/31) sqly::sqlite_storage file_creation_wal_and_read_only_are_explicit
+[test:release]         PASS [   0.077s] (18/31) sqly database::tests::cancelled_close_retains_keeper_until_pool_is_drained
+[test:release]         PASS [   0.021s] (19/31) sqly::transactions sqlite_deferred_commit_failure
+[test:release]         PASS [   0.105s] (20/31) sqly::transactions sqlite_transaction_contract
+[test:release]         PASS [   0.175s] (21/31) sqly::core behavior::postgres::optional_value_integrations
+[test:release]         PASS [   0.177s] (22/31) sqly::core behavior::postgres::row_and_encoding_errors
+[test:release]         PASS [   0.145s] (23/31) sqly::transactions postgres_deferred_commit_failure
+[test:release]         PASS [   0.186s] (24/31) sqly::core behavior::postgres::parameter_contract
+[test:release]         PASS [   0.150s] (25/31) sqly::sqlite_transactions begin_immediate_serializes_writers_and_cancelled_begin_releases_its_connection
+[test:release]         PASS [   0.180s] (26/31) sqly::postgres_lifecycle cancellation_discards_the_busy_connection_and_allows_reuse
+[test:release]         PASS [   0.189s] (27/31) sqly::postgres_transactions dependent_read_sees_the_revision_committed_by_the_lock_holder
+[test:release]         LEAK [   0.231s] (28/31) sqly::postgres_lifecycle ambient_settings_child
+[test:release]         PASS [   0.199s] (29/31) sqly::postgres_transactions lost_acknowledgement_and_cancelled_commit_can_accompany_committed_writes
+[test:release]         PASS [   0.489s] (30/31) sqly::core behavior::postgres::crud_and_constraints
+[test:release]         PASS [   0.460s] (31/31) sqly::transactions postgres_transaction_contract
+[test:release] ────────────
+[test:release]      Summary [   0.516s] 31 tests run: 31 passed (1 leaky), 0 skipped
+[test:release]    Compiling sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[test:release]     Finished `release` profile [optimized] target(s) in 18.19s
+[test:release] ────────────
+[test:release]  Nextest run ID 6c2cda2a-8d98-41a8-b03d-f95ecf71f450 with nextest profile: default
+[test:release]     Starting 15 tests across 7 binaries
+[test:release]         PASS [   0.020s] ( 1/15) sqly::transactions lock_debug_redacts_names_and_values
+[test:release]         PASS [   0.021s] ( 2/15) sqly::postgres_lifecycle ambient_settings_child
+[test:release]         PASS [   0.023s] ( 3/15) sqly::core configuration_rejects_unknown_duplicate_and_invalid_options_without_echoing_credentials
+[test:release]         PASS [   0.031s] ( 4/15) sqly::postgres_lifecycle tls_does_not_silently_fall_back_to_plaintext
+[test:release]         PASS [   0.032s] ( 5/15) sqly::postgres_lifecycle ambient_settings_are_rejected_in_an_isolated_process
+[test:release]         PASS [   0.032s] ( 6/15) sqly::core disabled_sqlite_fails_before_connection
+[test:release]         PASS [   0.173s] ( 7/15) sqly::core behavior::postgres::optional_value_integrations
+[test:release]         PASS [   0.186s] ( 8/15) sqly::core behavior::postgres::parameter_contract
+[test:release]         PASS [   0.187s] ( 9/15) sqly::transactions postgres_deferred_commit_failure
+[test:release]         PASS [   0.222s] (10/15) sqly::postgres_lifecycle cancellation_discards_the_busy_connection_and_allows_reuse
+[test:release]         PASS [   0.262s] (11/15) sqly::postgres_transactions dependent_read_sees_the_revision_committed_by_the_lock_holder
+[test:release]         PASS [   0.276s] (12/15) sqly::postgres_transactions lost_acknowledgement_and_cancelled_commit_can_accompany_committed_writes
+[test:release]         PASS [   0.354s] (13/15) sqly::core behavior::postgres::row_and_encoding_errors
+[test:release]         PASS [   0.354s] (14/15) sqly::core behavior::postgres::crud_and_constraints
+[test:release]         PASS [   0.536s] (15/15) sqly::transactions postgres_transaction_contract
+[test:release] ────────────
+[test:release]      Summary [   0.536s] 15 tests run: 15 passed, 0 skipped
+[test:release]    Compiling sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[test:release]     Finished `release` profile [optimized] target(s) in 10.09s
+[test:release] ────────────
+[test:release]  Nextest run ID f7504c14-99fc-4240-b1da-874e500b3c41 with nextest profile: default
+[test:release]     Starting 20 tests across 7 binaries
+[test:release]         PASS [   0.019s] ( 1/20) sqly::core configuration_rejects_unknown_duplicate_and_invalid_options_without_echoing_credentials
+[test:release]         PASS [   0.024s] ( 2/20) sqly::transactions lock_debug_redacts_names_and_values
+[test:release]         PASS [   0.026s] ( 3/20) sqly database::tests::keeper_loss_is_terminal
+[test:release]         PASS [   0.029s] ( 4/20) sqly::sqlite_storage invalid_sqlite_boolean_is_a_decode_error
+[test:release]         PASS [   0.030s] ( 5/20) sqly::core behavior::sqlite::optional_value_integrations
+[test:release]         PASS [   0.030s] ( 6/20) sqly database::tests::keeper_preserves_data_after_query_connection_replacement
+[test:release]         PASS [   0.031s] ( 7/20) sqly::core memory_instances_are_isolated_and_require_one_query_connection
+[test:release]         PASS [   0.032s] ( 8/20) sqly::core disabled_postgres_fails_before_connection
+[test:release]         PASS [   0.032s] ( 9/20) sqly::core behavior::sqlite::row_and_encoding_errors
+[test:release]         PASS [   0.032s] (10/20) sqly database::tests::cancelled_statement_replaces_connection_without_losing_data
+[test:release]         PASS [   0.032s] (11/20) sqly database::tests::active_transaction_rejects_keeper_loss
+[test:release]         PASS [   0.032s] (12/20) sqly::core behavior::sqlite::parameter_contract
+[test:release]         PASS [   0.035s] (13/20) sqly::core behavior::sqlite::crud_and_constraints
+[test:release]         PASS [   0.035s] (14/20) sqly::sqlite_storage timestamp_storage_is_fixed_width_and_orders_instants
+[test:release]         PASS [   0.035s] (15/20) sqly::sqlite_storage file_creation_wal_and_read_only_are_explicit
+[test:release]         PASS [   0.021s] (16/20) sqly::transactions sqlite_deferred_commit_failure
+[test:release]         PASS [   0.049s] (17/20) sqly database::tests::transaction_retains_keeper_after_cancelled_shutdown_and_last_handle_drop
+[test:release]         PASS [   0.070s] (18/20) sqly database::tests::cancelled_close_retains_keeper_until_pool_is_drained
+[test:release]         PASS [   0.097s] (19/20) sqly::transactions sqlite_transaction_contract
+[test:release]         PASS [   0.162s] (20/20) sqly::sqlite_transactions begin_immediate_serializes_writers_and_cancelled_begin_releases_its_connection
+[test:release] ────────────
+[test:release]      Summary [   0.163s] 20 tests run: 20 passed, 0 skipped
+[test:release]    Compiling sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[test:release]     Finished `release` profile [optimized] target(s) in 1.78s
+[test:release] ────────────
+[test:release]  Nextest run ID 80149a6f-74ba-4d37-bd21-5407269cba16 with nextest profile: default
+[test:release]     Starting 3 tests across 7 binaries
+[test:release]         PASS [   0.015s] (1/3) sqly::core disabled_sqlite_fails_before_connection
+[test:release]         PASS [   0.015s] (2/3) sqly::core configuration_rejects_unknown_duplicate_and_invalid_options_without_echoing_credentials
+[test:release]         PASS [   0.015s] (3/3) sqly::core disabled_postgres_fails_before_connection
+[test:release] ────────────
+[test:release]      Summary [   0.016s] 3 tests run: 3 passed, 0 skipped
+[test:release] Finished in 83.96s
+Finished in 83.98s

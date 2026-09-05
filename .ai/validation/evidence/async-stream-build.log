@@ -1,0 +1,7 @@
+     Locking 2 packages to latest Rust 1.94 compatible versions
+      Adding async-stream v0.3.6
+      Adding async-stream-impl v0.3.6
+   Compiling async-stream-impl v0.3.6
+    Checking async-stream v0.3.6
+    Checking sqly-validation v0.0.0 (/Users/bhelmkamp/p/lithoscomputer/sqly/.ai/validation)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.52s

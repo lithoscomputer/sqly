@@ -1,0 +1,13 @@
+[check:package] $ cargo package --locked --allow-dirty --all-features
+    Blocking waiting for file lock on package cache
+warning: manifest has no license, license-file, documentation, homepage or repository
+  |
+  = note: see https://doc.rust-lang.org/cargo/reference/manifest.html#package-metadata for more info
+   Packaging sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+    Blocking waiting for file lock on package cache
+warning: package `chacha20 v0.10.1` in Cargo.lock is yanked in registry `crates-io`, consider updating to a version that is not yanked
+    Packaged 28 files, 263.6KiB (59.1KiB compressed)
+   Verifying sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+    Blocking waiting for file lock on build directory
+   Compiling sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly/target/package/sqly-0.1.0)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.47s

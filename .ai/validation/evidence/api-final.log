@@ -1,0 +1,9 @@
+   Compiling sqly-validation v0.0.0 (/Users/bhelmkamp/p/lithoscomputer/sqly/.ai/validation)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.75s
+     Running tests/api.rs (.ai/validation/target/debug/deps/api-2711962c18b64813)
+
+running 1 test
+test custom_and_nullable_codecs_work_in_a_downstream_crate ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

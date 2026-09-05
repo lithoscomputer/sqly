@@ -1,0 +1,13 @@
+{
+  "base": "Conveyor Cargo.lock bb8e5aef dated 2026-08-25",
+  "additional": {
+    "async-stream": {
+      "version": "0.3.6",
+      "published": "2024-10-01"
+    },
+    "async-stream-impl": {
+      "version": "0.3.6",
+      "published": "2024-10-01"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+error[E0499]: cannot borrow `tx` as mutable more than once at a time
+ --> .ai/validation/compile-fail/borrow.rs:5:18
+  |
+4 |     let rows = tx.query("SELECT 1").fetch();
+  |                -- first mutable borrow occurs here
+5 |     let _other = tx.query("SELECT 2");
+  |                  ^^ second mutable borrow occurs here
+6 |     drop(rows);
+  |          ---- first borrow later used here
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0499`.

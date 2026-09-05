@@ -1,0 +1,8 @@
+[check:docs] $ cargo doc --locked --no-deps --all-features
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+ Documenting sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.59s
+   Generated /Users/bhelmkamp/p/lithoscomputer/sqly/target/doc/sqly/index.html

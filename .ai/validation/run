@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+set -euo pipefail
+validation_root=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd)
+cd "$validation_root"
+container_name="sqly-validation-${RANDOM}-$$"
+image_id="sha256:da601a9204454c0e6b08bdb302ffd49be1c726b51db87bfdb89fea70b93d2d5e"
+docker run --detach --rm --pull=never --name "$container_name" \
+  -e POSTGRES_USER=sqly_validation -e POSTGRES_PASSWORD=sqly_validation \
+  -e POSTGRES_DB=sqly_validation -p 127.0.0.1::5432 \
+  --tmpfs /var/lib/postgresql "$image_id" >/dev/null
+trap 'docker stop "$container_name" >/dev/null' EXIT
+for attempt in {1..30}; do
+  if docker exec "$container_name" pg_isready -U sqly_validation >/dev/null 2>&1; then break; fi
+  sleep 1
+done
+docker exec "$container_name" pg_isready -U sqly_validation >/dev/null
+binding=$(docker port "$container_name" 5432)
+export SQLY_VALIDATION_POSTGRES_URL="postgres://sqly_validation:sqly_validation@127.0.0.1:${binding##*:}/sqly_validation"
+mise exec -- cargo +1.94.0 test --offline --locked --all-targets
+mise exec -- cargo +1.94.0 test --offline --locked --no-default-features --features sqlite
+mise exec -- cargo +1.94.0 test --offline --locked --no-default-features --features postgres
+mise exec -- cargo +1.94.0 check --offline --locked --no-default-features

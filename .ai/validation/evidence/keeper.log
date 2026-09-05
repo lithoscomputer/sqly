@@ -1,0 +1,21 @@
+   Compiling sqly-validation v0.0.0 (/Users/bhelmkamp/p/lithoscomputer/sqly/.ai/validation)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.64s
+     Running unittests src/lib.rs (.ai/validation/target/debug/deps/sqly_validation-258305b071bc939b)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/api.rs (.ai/validation/target/debug/deps/api-6e9da559361cc408)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.00s
+
+     Running tests/drivers.rs (.ai/validation/target/debug/deps/drivers-16a941703cd7c444)
+
+running 1 test
+test sqlite::keeper_preserves_data_across_query_connection_replacement ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 12 filtered out; finished in 0.00s
+

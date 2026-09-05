@@ -1,0 +1,131 @@
+check (ubuntu-24.04-arm)	Verify routine changes	﻿2026-09-05T21:12:27.2499298Z ##[group]Run mise run check
+check (ubuntu-24.04-arm)	Verify routine changes	2026-09-05T21:12:27.2499697Z ^[[36;1mmise run check^[[0m
+check (ubuntu-24.04-arm)	Verify routine changes	2026-09-05T21:12:27.2565996Z shell: /usr/bin/bash -e {0}
+check (ubuntu-24.04-arm)	Verify routine changes	2026-09-05T21:12:27.2566279Z env:
+check (ubuntu-24.04-arm)	Verify routine changes	2026-09-05T21:12:27.2566458Z   CARGO_TERM_COLOR: always
+check (ubuntu-24.04-arm)	Verify routine changes	2026-09-05T21:12:27.2566682Z   MISE_LOG_LEVEL: info
+check (ubuntu-24.04-arm)	Verify routine changes	2026-09-05T21:12:27.2569333Z   MISE_GITHUB_TOKEN: ***
+check (ubuntu-24.04-arm)	Verify routine changes	2026-09-05T21:12:27.2569603Z   MISE_TRUSTED_CONFIG_PATHS: /home/runner/work/sqly/sqly
+check (ubuntu-24.04-arm)	Verify routine changes	2026-09-05T21:12:27.2569884Z   MISE_YES: 1
+check (ubuntu-24.04-arm)	Verify routine changes	2026-09-05T21:12:27.2570068Z   CARGO_HOME: /home/runner/.cargo
+check (ubuntu-24.04-arm)	Verify routine changes	2026-09-05T21:12:27.2570375Z   RUSTUP_HOME: /home/runner/.rustup
+check (ubuntu-24.04-arm)	Verify routine changes	2026-09-05T21:12:27.2570620Z   RUSTUP_TOOLCHAIN: 1.97.1
+check (ubuntu-24.04-arm)	Verify routine changes	2026-09-05T21:12:27.2570832Z   CACHE_ON_FAILURE: true
+check (ubuntu-24.04-arm)	Verify routine changes	2026-09-05T21:12:27.2571035Z   CARGO_INCREMENTAL: 0
+check (ubuntu-24.04-arm)	Verify routine changes	2026-09-05T21:12:27.2571264Z   SQLY_TEST_BACKEND: both
+check (ubuntu-24.04-arm)	Verify routine changes	2026-09-05T21:12:27.2571462Z ##[endgroup]
+check (ubuntu-24.04-arm)	Verify routine changes	2026-09-05T21:12:27.2951804Z ^[[34m[test]^[[0m ^[[1m$ bin/test^[[0m
+check (ubuntu-24.04-arm)	Verify routine changes	2026-09-05T21:12:27.2953059Z ^[[38;5;10m[fmt:check]^[[0m ^[[1m$ cargo +nightly-2026-04-14 fmt --check --all^[[0m
+check (ubuntu-24.04-arm)	Verify routine changes	2026-09-05T21:12:27.2964351Z ^[[34m[test:doc]^[[0m ^[[1m$ cargo test --locked --doc --all-features^[[0m
+check (ubuntu-24.04-arm)	Verify routine changes	2026-09-05T21:12:27.2965274Z ^[[32m^[[1m[lint]^[[0m ^[[1m$ cargo clippy --locked --all-targets --all-features -- -D warnings^[[0m
+check (ubuntu-24.04-arm)	Verify routine changes	2026-09-05T21:12:27.3033075Z ^[[35m^[[2m[check:actions]^[[0m ^[[1m$ zizmor .github/workflows^[[0m
+check (ubuntu-24.04-arm)	Verify routine changes	2026-09-05T21:12:27.3034290Z ^[[35m^[[1m[check:whitespace]^[[0m ^[[1m$ git diff --check^[[0m
+check (ubuntu-24.04-arm)	Verify routine changes	2026-09-05T21:12:27.3034936Z ^[[32m^[[1m[check:features]^[[0m ^[[1m$ bin/check-features^[[0m
+check (ubuntu-24.04-arm)	Verify routine changes	2026-09-05T21:12:27.3035584Z ^[[35m[check:docs]^[[0m ^[[1m$ cargo doc --locked --no-deps --all-features^[[0m
+check (ubuntu-24.04-arm)	Verify routine changes	2026-09-05T21:12:27.3143615Z ^[[38;5;10m[fmt:check]^[[0m info: syncing channel updates for nightly-2026-04-14-aarch64-unknown-linux-gnu
+check (ubuntu-24.04-arm)	Verify routine changes	2026-09-05T21:12:27.3147783Z ^[[35m^[[2m[check:actions]^[[0m ^[[32m INFO^[[0m ^[[2mzizmor^[[0m^[[2m:^[[0m 🌈 zizmor v1.29.0
+check (ubuntu-24.04-arm)	Verify routine changes	2026-09-05T21:12:27.3205578Z ^[[35m^[[1m[check:whitespace]^[[0m ^[[1m$ git diff --cached --check^[[0m
+check (ubuntu-24.04-arm)	Verify routine changes	2026-09-05T21:12:27.3316688Z ^[[35m^[[1m[check:whitespace]^[[0m Finished in 29.2ms
+check (ubuntu-24.04-arm)	Verify routine changes	2026-09-05T21:12:27.3871883Z ^[[32m^[[1m[check:features]^[[0m ^[[1m^[[92m    Updating^[[0m crates.io index
+check (ubuntu-24.04-arm)	Verify routine changes	2026-09-05T21:12:27.3885512Z ^[[34m[test:doc]^[[0m ^[[1m^[[92m    Blocking^[[0m waiting for file lock on package cache
+check (ubuntu-24.04-arm)	Verify routine changes	2026-09-05T21:12:27.4000461Z ^[[35m[check:docs]^[[0m ^[[1m^[[92m    Blocking^[[0m waiting for file lock on package cache
+check (ubuntu-24.04-arm)	Verify routine changes	2026-09-05T21:12:27.4129787Z ^[[35m^[[2m[check:actions]^[[0m ^[[33m WARN^[[0m ^[[1maudit^[[0m^[[2m:^[[0m ^[[2mzizmor^[[0m^[[2m:^[[0m zizmor is running in offline mode by default; some audits and auto-fixes will not be available. see https://docs.zizmor.sh/usage/#operating-modes for details
+check (ubuntu-24.04-arm)	Verify routine changes	2026-09-05T21:12:27.4156615Z ^[[35m^[[2m[check:actions]^[[0m ^[[32m INFO^[[0m ^[[1maudit^[[0m^[[2m:^[[0m ^[[2mzizmor^[[0m^[[2m:^[[0m 🌈 completed .github/workflows/nightly.yml
+check (ubuntu-24.04-arm)	Verify routine changes	2026-09-05T21:12:27.4161430Z ^[[35m^[[2m[check:actions]^[[0m ^[[32mNo findings to report. Good job!^[[39m
+check (ubuntu-24.04-arm)	Verify routine changes	2026-09-05T21:12:27.4184594Z ^[[35m^[[2m[check:actions]^[[0m ^[[32m INFO^[[0m ^[[1maudit^[[0m^[[2m:^[[0m ^[[2mzizmor^[[0m^[[2m:^[[0m 🌈 completed .github/workflows/release.yml
+check (ubuntu-24.04-arm)	Verify routine changes	2026-09-05T21:12:27.4186442Z ^[[35m^[[2m[check:actions]^[[0m ^[[32m INFO^[[0m ^[[1maudit^[[0m^[[2m:^[[0m ^[[2mzizmor^[[0m^[[2m:^[[0m 🌈 completed .github/workflows/routine.yml
+check (ubuntu-24.04-arm)	Verify routine changes	2026-09-05T21:12:27.4193945Z ^[[35m^[[2m[check:actions]^[[0m Finished in 122.6ms
+check (ubuntu-24.04-arm)	Verify routine changes	2026-09-05T21:12:27.4807039Z ^[[38;5;10m[fmt:check]^[[0m info: latest update on 2026-04-14 for version 1.97.0-nightly (17584a181 2026-04-13)
+check (ubuntu-24.04-arm)	Verify routine changes	2026-09-05T21:12:27.4836648Z ^[[38;5;10m[fmt:check]^[[0m info: downloading 3 components
+check (ubuntu-24.04-arm)	Verify routine changes	2026-09-05T21:12:27.5123737Z ^[[32m^[[1m[lint]^[[0m error: 'cargo-clippy' is not installed for the toolchain '1.97.1-aarch64-unknown-linux-gnu'.
+check (ubuntu-24.04-arm)	Verify routine changes	2026-09-05T21:12:27.5150975Z ^[[32m^[[1m[lint]^[[0m help: run `rustup component add --toolchain 1.97.1-aarch64-unknown-linux-gnu clippy` to install it
+check (ubuntu-24.04-arm)	Verify routine changes	2026-09-05T21:12:27.5213339Z ^[[2mFinished in 232.8ms^[[0m
+check (ubuntu-24.04-arm)	Verify routine changes	2026-09-05T21:12:27.5214201Z ^[[32m^[[1m[lint]^[[0m ^[[31mERROR^[[0m task failed
+check (ubuntu-24.04-arm)	Verify routine changes	2026-09-05T21:12:27.5263607Z ##[error]Process completed with exit code 1.
+check (macos-15)	Verify routine changes	﻿2026-09-05T21:12:28.0184860Z ##[group]Run mise run check
+check (macos-15)	Verify routine changes	2026-09-05T21:12:28.0185300Z ^[[36;1mmise run check^[[0m
+check (macos-15)	Verify routine changes	2026-09-05T21:12:28.0244630Z shell: /bin/bash -e {0}
+check (macos-15)	Verify routine changes	2026-09-05T21:12:28.0244950Z env:
+check (macos-15)	Verify routine changes	2026-09-05T21:12:28.0245200Z   CARGO_TERM_COLOR: always
+check (macos-15)	Verify routine changes	2026-09-05T21:12:28.0245560Z   MISE_LOG_LEVEL: info
+check (macos-15)	Verify routine changes	2026-09-05T21:12:28.0248800Z   MISE_GITHUB_TOKEN: ***
+check (macos-15)	Verify routine changes	2026-09-05T21:12:28.0249260Z   MISE_TRUSTED_CONFIG_PATHS: /Users/runner/work/sqly/sqly
+check (macos-15)	Verify routine changes	2026-09-05T21:12:28.0249730Z   MISE_YES: 1
+check (macos-15)	Verify routine changes	2026-09-05T21:12:28.0250050Z   CARGO_HOME: /Users/runner/.cargo
+check (macos-15)	Verify routine changes	2026-09-05T21:12:28.0250440Z   RUSTUP_HOME: /Users/runner/.rustup
+check (macos-15)	Verify routine changes	2026-09-05T21:12:28.0250850Z   RUSTUP_TOOLCHAIN: 1.97.1
+check (macos-15)	Verify routine changes	2026-09-05T21:12:28.0251120Z   CACHE_ON_FAILURE: true
+check (macos-15)	Verify routine changes	2026-09-05T21:12:28.0251340Z   CARGO_INCREMENTAL: 0
+check (macos-15)	Verify routine changes	2026-09-05T21:12:28.0251560Z   SQLY_TEST_BACKEND: sqlite
+check (macos-15)	Verify routine changes	2026-09-05T21:12:28.0251860Z ##[endgroup]
+check (macos-15)	Verify routine changes	2026-09-05T21:12:28.1064330Z ^[[34m[test:doc]^[[0m ^[[1m$ cargo test --locked --doc --all-features^[[0m
+check (macos-15)	Verify routine changes	2026-09-05T21:12:28.1064850Z ^[[35m^[[1m[check:whitespace]^[[0m ^[[1m$ git diff --check^[[0m
+check (macos-15)	Verify routine changes	2026-09-05T21:12:28.1065450Z ^[[32m^[[1m[check:features]^[[0m ^[[1m$ bin/check-features^[[0m
+check (macos-15)	Verify routine changes	2026-09-05T21:12:28.1065890Z ^[[35m[check:docs]^[[0m ^[[1m$ cargo doc --locked --no-deps --all-features^[[0m
+check (macos-15)	Verify routine changes	2026-09-05T21:12:28.1066240Z ^[[34m[test]^[[0m ^[[1m$ bin/test^[[0m
+check (macos-15)	Verify routine changes	2026-09-05T21:12:28.1066730Z ^[[38;5;10m[fmt:check]^[[0m ^[[1m$ cargo +nightly-2026-04-14 fmt --check --all^[[0m
+check (macos-15)	Verify routine changes	2026-09-05T21:12:28.1067230Z ^[[35m^[[2m[check:actions]^[[0m ^[[1m$ zizmor .github/workflows^[[0m
+check (macos-15)	Verify routine changes	2026-09-05T21:12:28.1121460Z ^[[32m^[[1m[lint]^[[0m ^[[1m$ cargo clippy --locked --all-targets --all-features -- -D warnings^[[0m
+check (macos-15)	Verify routine changes	2026-09-05T21:12:28.1451010Z ^[[35m^[[1m[check:whitespace]^[[0m ^[[1m$ git diff --cached --check^[[0m
+check (macos-15)	Verify routine changes	2026-09-05T21:12:28.1486610Z ^[[38;5;10m[fmt:check]^[[0m info: syncing channel updates for nightly-2026-04-14-aarch64-apple-darwin
+check (macos-15)	Verify routine changes	2026-09-05T21:12:28.1643530Z ^[[35m^[[2m[check:actions]^[[0m ^[[32m INFO^[[0m ^[[2mzizmor^[[0m^[[2m:^[[0m 🌈 zizmor v1.29.0
+check (macos-15)	Verify routine changes	2026-09-05T21:12:28.2081300Z ^[[35m^[[1m[check:whitespace]^[[0m Finished in 95.0ms
+check (macos-15)	Verify routine changes	2026-09-05T21:12:28.2283490Z ^[[35m[check:docs]^[[0m ^[[1m^[[92m    Blocking^[[0m waiting for file lock on package cache
+check (macos-15)	Verify routine changes	2026-09-05T21:12:28.2385160Z ^[[34m[test:doc]^[[0m ^[[1m^[[92m    Blocking^[[0m waiting for file lock on package cache
+check (macos-15)	Verify routine changes	2026-09-05T21:12:28.2486370Z ^[[32m^[[1m[check:features]^[[0m ^[[1m^[[92m    Updating^[[0m crates.io index
+check (macos-15)	Verify routine changes	2026-09-05T21:12:28.2561190Z ^[[35m^[[2m[check:actions]^[[0m ^[[33m WARN^[[0m ^[[1maudit^[[0m^[[2m:^[[0m ^[[2mzizmor^[[0m^[[2m:^[[0m zizmor is running in offline mode by default; some audits and auto-fixes will not be available. see https://docs.zizmor.sh/usage/#operating-modes for details
+check (macos-15)	Verify routine changes	2026-09-05T21:12:28.2663570Z ^[[35m^[[2m[check:actions]^[[0m ^[[32m INFO^[[0m ^[[1maudit^[[0m^[[2m:^[[0m ^[[2mzizmor^[[0m^[[2m:^[[0m 🌈 completed .github/workflows/nightly.yml
+check (macos-15)	Verify routine changes	2026-09-05T21:12:28.2664510Z ^[[35m^[[2m[check:actions]^[[0m ^[[32mNo findings to report. Good job!^[[39m
+check (macos-15)	Verify routine changes	2026-09-05T21:12:28.2666320Z ^[[35m^[[2m[check:actions]^[[0m ^[[32m INFO^[[0m ^[[1maudit^[[0m^[[2m:^[[0m ^[[2mzizmor^[[0m^[[2m:^[[0m 🌈 completed .github/workflows/release.yml
+check (macos-15)	Verify routine changes	2026-09-05T21:12:28.2673010Z ^[[35m^[[2m[check:actions]^[[0m ^[[32m INFO^[[0m ^[[1maudit^[[0m^[[2m:^[[0m ^[[2mzizmor^[[0m^[[2m:^[[0m 🌈 completed .github/workflows/routine.yml
+check (macos-15)	Verify routine changes	2026-09-05T21:12:28.2742550Z ^[[35m^[[2m[check:actions]^[[0m Finished in 165.3ms
+check (macos-15)	Verify routine changes	2026-09-05T21:12:28.3258320Z ^[[34m[test]^[[0m ^[[1m^[[92m    Blocking^[[0m waiting for file lock on package cache
+check (macos-15)	Verify routine changes	2026-09-05T21:12:28.3968960Z ^[[38;5;10m[fmt:check]^[[0m info: latest update on 2026-04-14 for version 1.97.0-nightly (17584a181 2026-04-13)
+check (macos-15)	Verify routine changes	2026-09-05T21:12:28.4007100Z ^[[38;5;10m[fmt:check]^[[0m info: downloading 3 components
+check (macos-15)	Verify routine changes	2026-09-05T21:12:28.4310630Z ^[[32m^[[1m[lint]^[[0m error: 'cargo-clippy' is not installed for the toolchain '1.97.1-aarch64-apple-darwin'.
+check (macos-15)	Verify routine changes	2026-09-05T21:12:28.4332040Z ^[[32m^[[1m[lint]^[[0m help: run `rustup component add --toolchain 1.97.1-aarch64-apple-darwin clippy` to install it
+check (macos-15)	Verify routine changes	2026-09-05T21:12:28.4367250Z ^[[2mFinished in 339.7ms^[[0m
+check (macos-15)	Verify routine changes	2026-09-05T21:12:28.4367860Z ^[[32m^[[1m[lint]^[[0m ^[[31mERROR^[[0m task failed
+check (macos-15)	Verify routine changes	2026-09-05T21:12:28.4381460Z ##[error]Process completed with exit code 1.
+check (ubuntu-24.04)	Verify routine changes	﻿2026-09-05T21:12:28.2584030Z ##[group]Run mise run check
+check (ubuntu-24.04)	Verify routine changes	2026-09-05T21:12:28.2584389Z ^[[36;1mmise run check^[[0m
+check (ubuntu-24.04)	Verify routine changes	2026-09-05T21:12:28.2631603Z shell: /usr/bin/bash -e {0}
+check (ubuntu-24.04)	Verify routine changes	2026-09-05T21:12:28.2631894Z env:
+check (ubuntu-24.04)	Verify routine changes	2026-09-05T21:12:28.2632121Z   CARGO_TERM_COLOR: always
+check (ubuntu-24.04)	Verify routine changes	2026-09-05T21:12:28.2632381Z   MISE_LOG_LEVEL: info
+check (ubuntu-24.04)	Verify routine changes	2026-09-05T21:12:28.2635065Z   MISE_GITHUB_TOKEN: ***
+check (ubuntu-24.04)	Verify routine changes	2026-09-05T21:12:28.2635386Z   MISE_TRUSTED_CONFIG_PATHS: /home/runner/work/sqly/sqly
+check (ubuntu-24.04)	Verify routine changes	2026-09-05T21:12:28.2635713Z   MISE_YES: 1
+check (ubuntu-24.04)	Verify routine changes	2026-09-05T21:12:28.2635995Z   CARGO_HOME: /home/runner/.cargo
+check (ubuntu-24.04)	Verify routine changes	2026-09-05T21:12:28.2636272Z   RUSTUP_HOME: /home/runner/.rustup
+check (ubuntu-24.04)	Verify routine changes	2026-09-05T21:12:28.2636564Z   RUSTUP_TOOLCHAIN: 1.97.1
+check (ubuntu-24.04)	Verify routine changes	2026-09-05T21:12:28.2636818Z   CACHE_ON_FAILURE: true
+check (ubuntu-24.04)	Verify routine changes	2026-09-05T21:12:28.2637060Z   CARGO_INCREMENTAL: 0
+check (ubuntu-24.04)	Verify routine changes	2026-09-05T21:12:28.2637455Z   SQLY_TEST_BACKEND: both
+check (ubuntu-24.04)	Verify routine changes	2026-09-05T21:12:28.2637714Z ##[endgroup]
+check (ubuntu-24.04)	Verify routine changes	2026-09-05T21:12:28.3122312Z ^[[38;5;10m[fmt:check]^[[0m ^[[1m$ cargo +nightly-2026-04-14 fmt --check --all^[[0m
+check (ubuntu-24.04)	Verify routine changes	2026-09-05T21:12:28.3869091Z ^[[34m[test]^[[0m ^[[1m$ bin/test^[[0m
+check (ubuntu-24.04)	Verify routine changes	2026-09-05T21:12:28.4439032Z ^[[34m[test:doc]^[[0m ^[[1m$ cargo test --locked --doc --all-features^[[0m
+check (ubuntu-24.04)	Verify routine changes	2026-09-05T21:12:28.4440009Z ^[[35m[check:docs]^[[0m ^[[1m$ cargo doc --locked --no-deps --all-features^[[0m
+check (ubuntu-24.04)	Verify routine changes	2026-09-05T21:12:28.4525878Z ^[[38;5;10m[fmt:check]^[[0m info: syncing channel updates for nightly-2026-04-14-x86_64-unknown-linux-gnu
+check (ubuntu-24.04)	Verify routine changes	2026-09-05T21:12:28.5005510Z ^[[32m^[[1m[lint]^[[0m ^[[1m$ cargo clippy --locked --all-targets --all-features -- -D warnings^[[0m
+check (ubuntu-24.04)	Verify routine changes	2026-09-05T21:12:28.5027913Z ^[[35m^[[1m[check:whitespace]^[[0m ^[[1m$ git diff --check^[[0m
+check (ubuntu-24.04)	Verify routine changes	2026-09-05T21:12:28.5446716Z ^[[35m^[[2m[check:actions]^[[0m ^[[1m$ zizmor .github/workflows^[[0m
+check (ubuntu-24.04)	Verify routine changes	2026-09-05T21:12:28.5457023Z ^[[32m^[[1m[check:features]^[[0m ^[[1m$ bin/check-features^[[0m
+check (ubuntu-24.04)	Verify routine changes	2026-09-05T21:12:28.5645221Z ^[[35m^[[2m[check:actions]^[[0m ^[[32m INFO^[[0m ^[[2mzizmor^[[0m^[[2m:^[[0m 🌈 zizmor v1.29.0
+check (ubuntu-24.04)	Verify routine changes	2026-09-05T21:12:28.5646222Z ^[[35m^[[1m[check:whitespace]^[[0m ^[[1m$ git diff --cached --check^[[0m
+check (ubuntu-24.04)	Verify routine changes	2026-09-05T21:12:28.5646951Z ^[[35m^[[1m[check:whitespace]^[[0m Finished in 57.3ms
+check (ubuntu-24.04)	Verify routine changes	2026-09-05T21:12:28.5647963Z ^[[34m[test:doc]^[[0m ^[[1m^[[92m    Blocking^[[0m waiting for file lock on package cache
+check (ubuntu-24.04)	Verify routine changes	2026-09-05T21:12:28.5648808Z ^[[35m[check:docs]^[[0m ^[[1m^[[92m    Updating^[[0m crates.io index
+check (ubuntu-24.04)	Verify routine changes	2026-09-05T21:12:28.5649720Z ^[[32m^[[1m[check:features]^[[0m ^[[1m^[[92m    Blocking^[[0m waiting for file lock on package cache
+check (ubuntu-24.04)	Verify routine changes	2026-09-05T21:12:28.5830303Z ^[[35m^[[2m[check:actions]^[[0m ^[[33m WARN^[[0m ^[[1maudit^[[0m^[[2m:^[[0m ^[[2mzizmor^[[0m^[[2m:^[[0m zizmor is running in offline mode by default; some audits and auto-fixes will not be available. see https://docs.zizmor.sh/usage/#operating-modes for details
+check (ubuntu-24.04)	Verify routine changes	2026-09-05T21:12:28.5899877Z ^[[35m^[[2m[check:actions]^[[0m ^[[32m INFO^[[0m ^[[1maudit^[[0m^[[2m:^[[0m ^[[2mzizmor^[[0m^[[2m:^[[0m 🌈 completed .github/workflows/nightly.yml
+check (ubuntu-24.04)	Verify routine changes	2026-09-05T21:12:28.5915573Z ^[[35m^[[2m[check:actions]^[[0m ^[[32m INFO^[[0m ^[[1maudit^[[0m^[[2m:^[[0m ^[[2mzizmor^[[0m^[[2m:^[[0m 🌈 completed .github/workflows/release.yml
+check (ubuntu-24.04)	Verify routine changes	2026-09-05T21:12:28.5935021Z ^[[35m^[[2m[check:actions]^[[0m ^[[32mNo findings to report. Good job!^[[39m
+check (ubuntu-24.04)	Verify routine changes	2026-09-05T21:12:28.5937060Z ^[[35m^[[2m[check:actions]^[[0m ^[[32m INFO^[[0m ^[[1maudit^[[0m^[[2m:^[[0m ^[[2mzizmor^[[0m^[[2m:^[[0m 🌈 completed .github/workflows/routine.yml
+check (ubuntu-24.04)	Verify routine changes	2026-09-05T21:12:28.5974789Z ^[[35m^[[2m[check:actions]^[[0m Finished in 255.2ms
+check (ubuntu-24.04)	Verify routine changes	2026-09-05T21:12:28.7309657Z ^[[32m^[[1m[lint]^[[0m error: 'cargo-clippy' is not installed for the toolchain '1.97.1-x86_64-unknown-linux-gnu'.
+check (ubuntu-24.04)	Verify routine changes	2026-09-05T21:12:28.7311150Z ^[[32m^[[1m[lint]^[[0m help: run `rustup component add --toolchain 1.97.1-x86_64-unknown-linux-gnu clippy` to install it
+check (ubuntu-24.04)	Verify routine changes	2026-09-05T21:12:28.7320527Z ^[[2mFinished in 426.9ms^[[0m
+check (ubuntu-24.04)	Verify routine changes	2026-09-05T21:12:28.7321298Z ^[[32m^[[1m[lint]^[[0m ^[[31mERROR^[[0m task failed
+check (ubuntu-24.04)	Verify routine changes	2026-09-05T21:12:28.7360930Z ##[error]Process completed with exit code 1.

@@ -1,0 +1,28 @@
+[test:doc] $ cargo test --locked --doc --all-features
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on build directory
+   Compiling sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.02s
+   Doc-tests sqly
+
+running 5 tests
+test src/migrate.rs - migrate (line 5) - compile ... ok
+test src/stream.rs - stream::RowStream (line 22) - compile ... ok
+test src/lib.rs - (line 8) - compile ... ok
+test src/scoped.rs - scoped::ScopedDatabase (line 70) - compile ... ok
+test src/transaction.rs - transaction::Transaction (line 25) - compile ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 4 tests
+test src/stream.rs - stream::RowStream (line 33) - compile fail ... ok
+test src/value.rs - value::SqlValue (line 5) - compile fail ... ok
+test src/transaction.rs - transaction::Transaction (line 41) - compile fail ... ok
+test src/scoped.rs - scoped::ReadQuery (line 93) - compile fail ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.14s
+
+all doctests ran in 0.41s; merged doctests compilation took 0.26s

@@ -1,0 +1,8 @@
+    Finished `release` profile [optimized] target(s) in 0.06s
+────────────
+ Nextest run ID 8f31b878-72b7-4413-b783-7696911042a4 with nextest profile: default
+    Starting 2 tests across 7 binaries (29 tests skipped)
+        PASS [   0.007s] (1/2) sqly::postgres_lifecycle ambient_settings_child
+        PASS [   0.009s] (2/2) sqly::postgres_lifecycle ambient_settings_are_rejected_in_an_isolated_process
+────────────
+     Summary [   0.010s] 2 tests run: 2 passed, 29 skipped

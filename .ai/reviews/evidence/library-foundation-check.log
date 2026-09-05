@@ -1,0 +1,264 @@
+[test:release] $ cargo nextest run --locked --release --all-targets --all-featu…
+[check:msrv] $ bin/check-features +1.94.0
+[check:package] $ cargo package --locked --allow-dirty --all-features
+[fmt:check] $ cargo +nightly-2026-04-14 fmt --check --all
+[test] $ cargo nextest run --locked --all-targets --all-features --no-tests=pass
+[lint] $ cargo clippy --locked --all-targets --all-features -- -D warnings
+[check:features] $ bin/check-features
+[test:doc] $ cargo test --locked --doc --all-features
+[check:msrv]     Blocking waiting for file lock on package cache
+[test:doc]     Blocking waiting for file lock on package cache
+[check:features]     Blocking waiting for file lock on package cache
+[check:package] warning: manifest has no license, license-file, documentation, homepage or repository
+[check:package]   |
+[check:package]   = note: see https://doc.rust-lang.org/cargo/reference/manifest.html#package-metadata for more info
+[check:package]    Packaging sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[check:package]     Blocking waiting for file lock on package cache
+[fmt:check] Finished in 52.4ms
+[check:docs] $ cargo doc --locked --no-deps --all-features
+[check:msrv]     Blocking waiting for file lock on package cache
+[lint]     Blocking waiting for file lock on package cache
+[test:doc]     Blocking waiting for file lock on package cache
+[check:docs]     Blocking waiting for file lock on package cache
+[check:features]     Blocking waiting for file lock on package cache
+[test:release]     Blocking waiting for file lock on package cache
+[test]     Blocking waiting for file lock on package cache
+[check:package]     Blocking waiting for file lock on package cache
+[check:msrv]     Blocking waiting for file lock on package cache
+[lint]     Blocking waiting for file lock on package cache
+[test:doc]     Blocking waiting for file lock on package cache
+[check:features]     Blocking waiting for file lock on package cache
+[check:docs]     Blocking waiting for file lock on package cache
+[test:release]     Blocking waiting for file lock on package cache
+[check:package] warning: package `chacha20 v0.10.1` in Cargo.lock is yanked in registry `crates-io`, consider updating to a version that is not yanked
+[test]     Blocking waiting for file lock on package cache
+[check:package]     Packaged 5 files, 47.2KiB (13.3KiB compressed)
+[check:package]    Verifying sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[check:package]     Blocking waiting for file lock on package cache
+[check:msrv]     Blocking waiting for file lock on package cache
+[lint]     Blocking waiting for file lock on package cache
+[test:doc]     Blocking waiting for file lock on package cache
+[check:features]     Blocking waiting for file lock on package cache
+[check:docs]     Blocking waiting for file lock on package cache
+[test:release]     Blocking waiting for file lock on package cache
+[test]     Blocking waiting for file lock on package cache
+[check:package]     Blocking waiting for file lock on package cache
+[check:msrv]     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.19s
+[lint]     Blocking waiting for file lock on package cache
+[test:doc]     Blocking waiting for file lock on build directory
+[check:msrv]     Blocking waiting for file lock on package cache
+[check:docs]     Blocking waiting for file lock on package cache
+[check:features]     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.22s
+[test:release]     Blocking waiting for file lock on package cache
+[check:features]     Blocking waiting for file lock on package cache
+[test:doc]    Compiling sqlx-sqlite v0.9.0
+[test:doc]    Compiling sqlx-postgres v0.9.0
+[test]     Blocking waiting for file lock on package cache
+[check:package]     Blocking waiting for file lock on package cache
+[check:docs]     Blocking waiting for file lock on build directory
+[test:release]     Blocking waiting for file lock on package cache
+[check:msrv]     Blocking waiting for file lock on package cache
+[check:features]     Blocking waiting for file lock on package cache
+[lint]     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.29s
+[lint] Finished in 349.4ms
+[check:actions] $ zizmor .github/workflows
+[check:package]     Blocking waiting for file lock on build directory
+[test]     Blocking waiting for file lock on package cache
+[test:release]     Blocking waiting for file lock on package cache
+[check:msrv]     Blocking waiting for file lock on package cache
+[check:features]     Blocking waiting for file lock on package cache
+[check:actions]  INFO zizmor: 🌈 zizmor v1.29.0
+[test]     Blocking waiting for file lock on package cache
+[check:actions]  WARN audit: zizmor: zizmor is running in offline mode by default; some audits and auto-fixes will not be available. see https://docs.zizmor.sh/usage/#operating-modes for details
+[check:actions]  INFO audit: zizmor: 🌈 completed .github/workflows/nightly.yml
+[check:actions]  INFO audit: zizmor: 🌈 completed .github/workflows/release.yml
+[check:actions]  INFO audit: zizmor: 🌈 completed .github/workflows/routine.yml
+[check:actions] No findings to report. Good job!
+[test:release]     Blocking waiting for file lock on package cache
+[check:actions] Finished in 30.9ms
+[check:whitespace] $ git diff --check
+[check:msrv]     Blocking waiting for file lock on package cache
+[check:whitespace] $ git diff --cached --check
+[check:features]     Blocking waiting for file lock on package cache
+[check:whitespace] Finished in 31.3ms
+[check:features]     Blocking waiting for file lock on build directory
+[test]     Blocking waiting for file lock on build directory
+[check:msrv]     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.20s
+[test:release]    Compiling libsqlite3-sys v0.30.1
+[check:msrv]     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.06s
+[test:release]    Compiling sqlx-sqlite v0.9.0
+[check:msrv]     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.05s
+[check:msrv]     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.05s
+[check:msrv]    Compiling serde_core v1.0.229
+[check:msrv]    Compiling zmij v1.0.23
+[check:msrv]    Compiling serde_json v1.0.151
+[check:msrv]    Compiling serde v1.0.229
+[check:msrv]    Compiling num-conv v0.2.2
+[check:msrv]    Compiling time-core v0.1.9
+[check:msrv]     Checking crypto-common v0.1.6
+[check:msrv]    Compiling serde_derive v1.0.229
+[check:msrv]     Checking powerfmt v0.2.0
+[check:msrv]     Checking deranged v0.5.8
+[check:msrv]     Checking uuid v1.24.0
+[check:msrv]     Checking digest v0.10.7
+[check:msrv]    Compiling time-macros v0.2.32
+[check:msrv]     Checking sha2 v0.10.9
+[check:msrv]     Checking time v0.3.55
+[test:release]    Compiling sqlx v0.9.0
+[test:doc]    Compiling sqlx v0.9.0
+[test:doc]    Compiling sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[check:msrv]     Checking sqlx-core v0.9.0
+[test:release]    Compiling sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[test:release]     Finished `release` profile [optimized] target(s) in 2.21s
+[test:release] ────────────
+[test:release]  Nextest run ID c48a59ac-6086-4e39-9ad2-f1d4d43829ed with nextest profile: default
+[test:release]     Starting 0 tests across 1 binary
+[test:release] ────────────
+[test:release]      Summary [   0.000s] 0 tests run: 0 passed, 0 skipped
+[test:release] Finished in 2.51s
+[test:doc]     Finished `test` profile [unoptimized + debuginfo] target(s) in 2.59s
+[test:doc]    Doc-tests sqly
+[check:docs]     Checking typenum v1.20.1
+[check:docs]     Checking cmov v0.5.4
+[check:docs]     Checking serde_core v1.0.229
+[check:docs]    Compiling num-conv v0.2.2
+[check:docs]    Compiling time-core v0.1.9
+[check:docs]     Checking zmij v1.0.23
+[check:docs]     Checking form_urlencoded v1.2.2
+[test:doc] 
+[test:doc] running 0 tests
+[test:doc] 
+[test:doc] test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+[test:doc] 
+[check:docs]     Checking tinyvec_macros v0.1.1
+[check:docs]     Checking itoa v1.0.18
+[check:docs]     Checking powerfmt v0.2.0
+[check:docs]     Checking rand_core v0.10.1
+[check:docs]     Checking deranged v0.5.8
+[test:doc] Finished in 2.65s
+[check:docs]     Checking num-traits v0.2.19
+[check:docs]     Checking uuid v1.24.0
+[check:docs]     Checking cpufeatures v0.3.0
+[check:docs]     Checking spin v0.9.9
+[check:docs]     Checking tinyvec v1.12.0
+[check:docs]     Checking url v2.5.8
+[check:docs]     Checking futures-channel v0.3.33
+[check:docs]     Checking unicode-properties v0.1.4
+[check:docs]     Checking unicode-bidi v0.3.18
+[check:docs]     Checking ctutils v0.4.2
+[check:docs]     Checking libsqlite3-sys v0.30.1
+[check:docs]     Checking futures-executor v0.3.33
+[check:docs]     Checking getrandom v0.4.3
+[check:docs]    Compiling time-macros v0.2.32
+[check:docs]     Checking chacha20 v0.10.1
+[check:docs]     Checking flume v0.12.0
+[check:docs]     Checking hex v0.4.3
+[check:docs]     Checking dotenvy v0.15.7
+[check:docs]     Checking whoami v2.1.2
+[check:docs]     Checking byteorder v1.5.0
+[check:docs]     Checking bitflags v2.13.1
+[check:docs]     Checking rand v0.10.2
+[check:docs]     Checking unicode-normalization v0.1.25
+[check:docs]     Checking atoi v2.0.0
+[check:docs]     Checking stringprep v0.1.5
+[check:docs]     Checking hybrid-array v0.4.14
+[check:docs]     Checking generic-array v0.14.9
+[check:msrv]     Checking sqlx v0.9.0
+[check:msrv]     Checking sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[check:msrv]     Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.45s
+[check:docs]     Checking time v0.3.55
+[check:docs]     Checking crypto-common v0.1.6
+[check:docs]     Checking block-buffer v0.10.4
+[check:msrv]     Checking sqlx-core v0.9.0
+[check:docs]     Checking block-buffer v0.12.1
+[check:docs]     Checking crypto-common v0.2.2
+[check:docs]     Checking digest v0.10.7
+[check:docs]     Checking sha2 v0.10.9
+[check:docs]     Checking serde v1.0.229
+[check:docs]     Checking serde_json v1.0.151
+[check:docs]     Checking digest v0.11.3
+[check:docs]     Checking hmac v0.13.0
+[check:docs]     Checking md-5 v0.11.0
+[check:docs]     Checking sha2 v0.11.0
+[check:docs]     Checking hkdf v0.13.0
+[check:docs]     Checking sqlx-core v0.9.0
+[check:msrv]     Checking sqlx-sqlite v0.9.0
+[check:msrv]     Checking sqlx v0.9.0
+[check:msrv]     Checking sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[check:msrv]     Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.22s
+[check:msrv]     Checking crypto-common v0.1.6
+[check:docs]     Checking sqlx-sqlite v0.9.0
+[check:docs]     Checking sqlx-postgres v0.9.0
+[check:msrv]     Checking digest v0.10.7
+[check:msrv]     Checking sha2 v0.10.9
+[check:msrv]     Checking sqlx-core v0.9.0
+[check:msrv]     Checking sqlx-postgres v0.9.0
+[check:docs]     Checking sqlx v0.9.0
+[check:docs]  Documenting sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[check:docs]     Finished `dev` profile [unoptimized + debuginfo] target(s) in 5.48s
+[check:docs]    Generated /Users/bhelmkamp/p/lithoscomputer/sqly/target/doc/sqly/index.html
+[check:docs] Finished in 5.51s
+[check:package]    Compiling sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly/target/package/sqly-0.1.0)
+[check:package]     Finished `dev` profile [unoptimized + debuginfo] target(s) in 5.57s
+[check:package] Finished in 5.61s
+[check:features]     Checking sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[check:features]     Finished `dev` profile [unoptimized + debuginfo] target(s) in 5.35s
+[test]    Compiling sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[check:features]     Blocking waiting for file lock on build directory
+[test]     Finished `test` profile [unoptimized + debuginfo] target(s) in 5.44s
+[test] ────────────
+[test]  Nextest run ID a1f3fcda-b41a-4633-bbe4-a399d4101862 with nextest profile: default
+[test]     Starting 0 tests across 1 binary
+[test] ────────────
+[test]      Summary [   0.000s] 0 tests run: 0 passed, 0 skipped
+[test] Finished in 5.75s
+[check:features]     Checking sqlx-core v0.9.0
+[check:msrv]     Checking sqlx v0.9.0
+[check:msrv]     Checking sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[check:msrv]     Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.75s
+[check:msrv]     Checking sqlx-core v0.9.0
+[check:features]     Checking sqlx-sqlite v0.9.0
+[check:features]     Checking sqlx v0.9.0
+[check:features]     Checking sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[check:features]     Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.11s
+[check:features]     Checking crypto-common v0.1.6
+[check:features]     Checking digest v0.10.7
+[check:msrv]     Checking sqlx-sqlite v0.9.0
+[check:msrv]     Checking sqlx-postgres v0.9.0
+[check:features]     Checking sha2 v0.10.9
+[check:features]     Checking sqlx-core v0.9.0
+[check:features]     Checking sqlx-postgres v0.9.0
+[check:msrv]     Checking sqlx v0.9.0
+[check:msrv]     Checking sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[check:msrv]     Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.59s
+[check:msrv] Finished in 7.81s
+[check:features]     Checking sqlx v0.9.0
+[check:features]     Checking sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[check:features]     Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.64s
+[check:features]     Checking sqlx-core v0.9.0
+[check:features]     Checking sqlx-postgres v0.9.0
+[check:features]     Checking sqlx-sqlite v0.9.0
+[check:features]     Checking sqlx v0.9.0
+[check:features]     Checking sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[check:features]     Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.53s
+[check:features]     Checking crypto-common v0.1.6
+[check:features]     Checking digest v0.10.7
+[check:features]     Checking sha2 v0.10.9
+[check:features]     Checking sqlx-core v0.9.0
+[check:features]     Checking sqlx v0.9.0
+[check:features]     Checking sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[check:features]     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.84s
+[check:features]     Checking sqlx-core v0.9.0
+[check:features]     Checking sqlx-sqlite v0.9.0
+[check:features]     Checking sqlx v0.9.0
+[check:features]     Checking sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[check:features]     Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.04s
+[check:features]     Checking sqlx-core v0.9.0
+[check:features]     Checking sqlx-postgres v0.9.0
+[check:features]     Checking sqlx v0.9.0
+[check:features]     Checking sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[check:features]     Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.47s
+[check:features]     Checking sqly v0.1.0 (/Users/bhelmkamp/p/lithoscomputer/sqly)
+[check:features]     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.08s
+[check:features] Finished in 13.52s
+Finished in 13.53s

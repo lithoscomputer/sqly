@@ -1,0 +1,18 @@
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on build directory
+    Checking typenum v1.20.1
+    Checking getrandom v0.4.3
+    Checking form_urlencoded v1.2.2
+    Checking url v2.5.8
+    Checking uuid v1.24.0
+    Checking generic-array v0.14.9
+    Checking block-buffer v0.10.4
+    Checking crypto-common v0.1.6
+    Checking digest v0.10.7
+    Checking sha2 v0.10.9
+    Checking sqlx-core v0.9.0
+    Checking sqlx v0.9.0
+    Checking sqly-validation v0.0.0 (/Users/bhelmkamp/p/lithoscomputer/sqly/.ai/validation)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 25.62s

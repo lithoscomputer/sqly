@@ -1,0 +1,7 @@
+[test:doc] $ cargo test --locked --doc --all-features check:docs check:package
+error: unexpected argument 'check:package' found
+
+Usage: cargo test [OPTIONS] [TESTNAME] [-- [ARGS]...]
+
+For more information, try '--help'.
+[test:doc] ERROR task failed
