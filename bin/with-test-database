@@ -23,11 +23,16 @@ trap 'exit 130' INT
 trap 'exit 143' TERM
 trap 'exit 129' HUP
 trap 'docker stop "$container_name" >/dev/null' EXIT
+# Initialization uses a temporary Unix-socket-only server. Wait for the final
+# TCP server used by the tests instead of observing that temporary server.
 for attempt in {1..30}; do
-  if docker exec "$container_name" pg_isready -U sqly_test >/dev/null 2>&1; then break; fi
+  if docker exec "$container_name" pg_isready -h 127.0.0.1 -U sqly_test -d sqly_test >/dev/null 2>&1; then break; fi
   sleep 1
 done
-docker exec "$container_name" pg_isready -U sqly_test >/dev/null
+if ! docker exec "$container_name" pg_isready -h 127.0.0.1 -U sqly_test -d sqly_test; then
+  docker logs "$container_name" >&2
+  exit 1
+fi
 binding=$(docker port "$container_name" 5432)
 export SQLY_TEST_POSTGRES_URL="postgres://sqly_test:sqly_test@127.0.0.1:${binding##*:}/sqly_test?sslmode=disable"
 "$@"
