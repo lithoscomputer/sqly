@@ -35,3 +35,16 @@ Project requirements and accepted architecture decisions override general style-
 ## Working documents
 
 Save plans under `.ai/plans/` and reviews under `.ai/reviews/`.
+
+## README.md
+
+Keep README.md in the Lithos README format: description and runnable example,
+why, audience, capabilities and features, installation and usage, status,
+Lithos family, contributing, and license.
+
+- Keep API detail in rustdoc and longer guides in `docs/`.
+- Change README.md when its description, examples, install instructions, scope,
+  status, or family table changes.
+- Use absolute GitHub URLs for repository links.
+- README Rust examples are complete programs tested as doctests with `sqlite`
+  enabled. Run `mise run test:doc` after changing them.

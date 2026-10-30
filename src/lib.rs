@@ -58,3 +58,7 @@ pub use sql::Sql;
 pub use stream::RowStream;
 pub use transaction::Transaction;
 pub use value::{Decode, Encode, SqlValue};
+
+#[cfg(all(doctest, feature = "sqlite"))]
+#[doc = include_str!("../README.md")]
+pub struct ReadmeDoctests;

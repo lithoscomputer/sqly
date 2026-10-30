@@ -1,17 +1,15 @@
 # sqly
 
-sqly is an async Rust library for applications that support SQLite and PostgreSQL. Applications own the Tokio runtime, schema, and transaction policy.
+Async SQL for Rust applications that use SQLite and PostgreSQL through one API.
 
-Connections, buffered and streaming queries, portable values, explicit transactions, row locks, optional ambient scopes, and migrations are implemented. A separate warehouse consumer exercises the public API on both backends. The crate is under development and is not published. Full Conveyor replacement remains release acceptance work.
-
-## Querying
-
-Enable `sqlite`, `postgres`, or both. Default features are empty.
+[![CI](https://github.com/lithoscomputer/sqly/actions/workflows/routine.yml/badge.svg)](https://github.com/lithoscomputer/sqly/actions/workflows/routine.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](#license)
 
 ```rust
 use sqly::{Database, SqliteOptions};
 
-async fn example() -> sqly::Result<()> {
+#[tokio::main]
+async fn main() -> sqly::Result<()> {
     let db = Database::connect(SqliteOptions::in_memory()).await?;
     db.query("CREATE TABLE users (id BIGINT PRIMARY KEY, name TEXT NOT NULL)")
         .execute().await?;
@@ -25,114 +23,110 @@ async fn example() -> sqly::Result<()> {
 }
 ```
 
-`query_as::<T>` maps rows through your `FromRow` implementation. Implement `Encode` and `Decode` to map domain types to built-in representations. Bindings are owned. `Encode::encode(self)` moves owned representations into the query; borrowed strings and byte slices are copied when bound. Application types can implement `Encode` separately for their owned and borrowed forms.
+Part of [Lithos](#part-of-lithos), a family of Rust building blocks for AI tools.
 
-For counts and one-off projections, use a fallible mapper. It works with buffered results and streams, and the closure can borrow application state:
+## Why does this exist?
+
+sqly provides shared query, value, and transaction types for applications that support both SQLite and PostgreSQL. It uses SQLx internally and keeps driver types out of its public API.
+
+TODO(human): What application need led to sqly, and why did using SQLx directly not fit?
+
+## Who is it for?
+
+**Use it if** you are building a Tokio application that needs SQLite, PostgreSQL, or both, and you want to own the SQL and transaction boundaries.
+
+**Look elsewhere if** you need compile-time SQL checking or MySQL support; [SQLx](https://github.com/transact-rs/sqlx) provides those capabilities.
+
+## What does it do?
+
+- Connect through a pool and run parameterized queries with buffered or streamed results.
+- Map rows and application types through `FromRow`, `Encode`, `Decode`, or a fallible closure.
+- Run explicit write transactions and lock existing rows.
+- Share a write transaction across store methods with optional task-local scopes.
+- Apply namespaced migrations and adopt an existing migration ledger.
+
+**Out of scope:** sqly does not generate SQL or retry writes automatically. Your application supplies the Tokio runtime, schema, SQL, and transaction policy.
+
+No features are enabled by default. Enable at least one database driver to connect.
+
+| Feature | Default | Enables |
+|---|---|---|
+| `sqlite` | No | SQLite connections |
+| `postgres` | No | PostgreSQL connections |
+| `uuid` | No | UUID values |
+| `time` | No | Timestamp values from the `time` crate |
+| `json` | No | JSON values from `serde_json` |
+| `migrate` | No | Migrations and legacy-ledger adoption |
+| `ambient` | No | Task-local write scopes |
+
+## How do I use it?
+
+### Install
+
+This library is under development and is not published to crates.io. From your application directory, add it from Git:
+
+```sh
+cargo add sqly --git https://github.com/lithoscomputer/sqly --features sqlite
+cargo add tokio --features macros,rt-multi-thread
+```
+
+Use Rust 1.94 or later. The examples run with an in-memory SQLite database and need no database server. Copy the first example into `src/main.rs`, then run `cargo run`.
+
+To use PostgreSQL, enable `postgres` and supply a connection URL or `PostgresOptions`. See [connection settings](https://github.com/lithoscomputer/sqly/blob/main/docs/usage.md#connections) for credentials and TLS configuration.
+
+### Use it as a library
+
+Lock an existing row, update it, and commit the transaction:
 
 ```rust
-async fn example(db: &sqly::Database) -> sqly::Result<()> {
-let count: i64 = db.query("SELECT COUNT(*) AS count FROM users")
-    .try_map(|row| row.try_get::<i64>("count"))
-    .fetch_one().await?;
+use sqly::{Database, Lock, SqliteOptions};
+
+#[tokio::main]
+async fn main() -> sqly::Result<()> {
+    let db = Database::connect(SqliteOptions::in_memory()).await?;
+    db.query("CREATE TABLE users (id BIGINT PRIMARY KEY, name TEXT NOT NULL)")
+        .execute().await?;
+    db.query("INSERT INTO users VALUES ($1, $2)")
+        .bind(1_i64).bind("Ada").execute().await?;
+    let mut tx = db.begin_write().await?;
+    tx.require_lock(Lock::row("users").key("id", 1_i64)).await?;
+    tx.query("UPDATE users SET name = $1 WHERE id = $2")
+        .bind("Grace").bind(1_i64).execute().await?;
+    tx.commit().await?;
+    let row = db.query("SELECT name FROM users WHERE id = $1")
+        .bind(1_i64).fetch_one().await?;
+    assert_eq!(row.try_get::<String>("name")?, "Grace");
+    db.close().await;
     Ok(())
 }
 ```
 
-`fetch_one` returns the first row or `RowNotFound`; `fetch_optional` returns the first row or `None`. Neither checks uniqueness. `try_map` is also available on `ScopedDatabase::read`; mapped queries have no `execute` method. Mapping errors follow the same buffered and streaming cleanup rules as `FromRow` errors.
+See the [usage guide](https://github.com/lithoscomputer/sqly/blob/main/docs/usage.md) for query mapping, transaction failures, ambient scopes, streaming, migrations, and connection settings. The [warehouse consumer](https://github.com/lithoscomputer/sqly/blob/main/consumers/warehouse/src/lib.rs) shows these APIs in a separate application schema.
 
-SQL must be static and contain one statement. Use `$1` through `$N`, in numeric binding order, with every number present. References may repeat or appear out of order. Use `Sql::dialects(sqlite, postgres)` for a declared dialect difference. Sqly trusts application SQL and does not tokenize, rewrite, or police statements. Parameter count checks require preparation I/O. PostgreSQL preparation includes additional type-hint probes to reject unused trailing bindings. `BindCount` reports an unknown expected count when the server cannot infer a missing parameter's type.
+Generate the API reference from your application with `cargo doc -p sqly --no-deps --open`. It includes the features you enabled for sqly.
 
-`uuid`, `time`, and `json` enable value integrations. SQLite stores UUIDs as canonical text, instants as UTC text with six fractional digits, and JSON as text. PostgreSQL uses native UUID, TIMESTAMPTZ, and JSONB types. Non-finite floats, sub-microsecond timestamps, and instants outside UTC years 0001–9999 fail. `migrate` enables namespaced migrations and legacy-ledger adoption. `ambient` enables task-local write scopes.
+## Status and compatibility
 
-## Transactions and row locks
+- **Maturity:** Under development, version 0.1.0; publication is disabled. The [release checklist](https://github.com/lithoscomputer/sqly/blob/main/DEVELOPING.md#continuous-integration-and-releases) tracks remaining acceptance work.
+- **MSRV:** Rust 1.94, edition 2024.
+- **CI platforms:** Linux x86_64 and arm64, and macOS arm64. Linux tests both databases; macOS runs SQLite tests and compiles both drivers.
+- **Stored formats:** [Value encodings](https://github.com/lithoscomputer/sqly/blob/main/docs/usage.md#querying) and the [migration ledger and checksums](https://github.com/lithoscomputer/sqly/blob/main/docs/usage.md#migrations) matter beyond Rust types.
+- **Change history:** No changelog yet; see [commits](https://github.com/lithoscomputer/sqly/commits/main/).
 
-```rust
-use sqly::{Database, Lock};
+## Part of Lithos
 
-async fn rename(db: &Database, id: i64, name: &str) -> sqly::Result<bool> {
-    let mut tx = db.begin_write().await?;
-    if !tx.lock(Lock::row("users").key("id", id)).await? {
-        tx.rollback().await?;
-        return Ok(false);
-    }
-    tx.query("UPDATE users SET name = $1 WHERE id = $2")
-        .bind(name).bind(id).execute().await?;
-    tx.commit().await?;
-    Ok(true)
-}
-```
+| Crate | Role |
+|---|---|
+| [lithos-llm](https://github.com/lithoscomputer/lithos-llm) | Model access: one client and catalog across LLM providers |
+| [pebble](https://github.com/lithoscomputer/pebble) | Agent loop, plus a coding agent and CLI built on it |
+| [sandbox-driver](https://github.com/lithoscomputer/sandbox-driver) | Sandboxes (host, Docker, cloud VMs) behind one interface |
+| [petri](https://github.com/lithoscomputer/petri) | Workflow engine that runs CI and agent workflows on the crates above |
+| **[sqly](https://github.com/lithoscomputer/sqly)** | **Async SQL for SQLite and PostgreSQL** |
 
-`begin_write` returns an owned transaction. Queries borrow it mutably, so simultaneous queries through one transaction do not compile. SQLite starts with `BEGIN IMMEDIATE`; PostgreSQL uses READ COMMITTED. Queries through `Database` still use the pool.
+## Contributing
 
-Locks select an existing primary or unique key. Repeated `key` calls support composite keys. Missing rows return `false`; multiple matches return `NonUniqueLock`. Use `require_lock` on a transaction or ambient handle to require a row and return `LockNotFound` if absent. A handled missing-row error alone does not abort the transaction. Identifiers must be simple ASCII names of at most 63 bytes. Empty selectors, duplicate columns, and NULL keys fail before I/O. PostgreSQL uses a separate `SELECT ... FOR UPDATE`; SQLite checks existence while holding its writer reservation. Read dependent rows after acquiring the lock. Acquire multiple locks in a consistent order. Missing PostgreSQL rows are not locked.
+Development setup, tests, and conventions are in [DEVELOPING.md](https://github.com/lithoscomputer/sqly/blob/main/DEVELOPING.md).
 
-`commit` and `rollback` consume the transaction. Dropping an unfinished transaction discards its connection; connection closure rolls back the work. A database error or cancelled operation makes the transaction rollback-only. Subsequent queries return `TransactionAborted`; committing that state rolls back and returns the same error. Local encoding, selector validation, bind-count, and buffered row-conversion errors do not abort it. PostgreSQL preparation probes use an internal savepoint to preserve this behavior.
+## License
 
-A lost COMMIT acknowledgement returns `CommitUnknown`; the write may have committed. Cancellation during COMMIT has the same uncertainty. Sqly never retries a write or transaction automatically. Application SQL must leave transaction control to sqly. This is a caller contract; sqly does not parse or police statements.
-
-`Database::close` waits for active transactions. Finish or drop them before awaiting shutdown. Cancelling shutdown leaves the pool closed; an existing transaction can still finish, and calling `close` again drains cleanup.
-
-## Ambient scopes
-
-Enable `ambient` and give stores a cloned `ScopedDatabase` from `db.scoped()`. Store methods take application inputs; transaction handles stay out of their signatures.
-
-```rust
-async fn change_name(db: &sqly::ScopedDatabase, id: i64, name: &str) -> sqly::Result<()> {
-    db.write_locking(sqly::Lock::row("users").key("id", id), || async {
-        db.query("UPDATE users SET name = $1 WHERE id = $2")
-            .bind(name).bind(id).execute().await?;
-        Ok::<_, sqly::Error>(())
-    }).await
-}
-```
-
-`write_locking` returns `LockNotFound` without invoking the closure when its owner row is absent.
-
-`write` and `write_locking` commit on closure success and roll back on error, panic, or cancellation. Application errors are preserved if rollback also fails. Caught database failures make the scope rollback-only. Nested scopes fail before acquisition. Separately connected databases cannot join one scope; clones share identity.
-
-`query` and `query_as` require an active scope for every terminal method, including SELECT and RETURNING queries. `read` and `read_as` join an active scope and otherwise use the pool. Read builders provide fetch methods without `execute`; callers must supply read-only SQL. Builders resolve membership when executed. Spawned tasks inherit no scope. Concurrent buffered operations in one task serialize over the transaction.
-
-## Streaming
-
-`Query::fetch` and `ReadQuery::fetch` return `RowStream<T>`, which implements `futures_core::Stream<Item = sqly::Result<T>>`. Use `futures_util::TryStreamExt` to consume it. Execution begins on first poll; rows decode as consumed. The first error ends the stream. Drivers and server plans may buffer internally.
-
-An explicit transaction stream keeps its mutable transaction borrow. Dropping a started stream early conservatively makes that transaction rollback-only. A pooled stream discards its connection when cleanup is uncertain. Dropping a stream from a write with RETURNING does not prove that the write rolled back.
-
-Ambient scopes own their cursors. Competing queries, locks, and streams return `ActiveStream` without waiting or aborting the transaction. Exhaustion releases the connection for later operations. Early drop makes the transaction rollback-only. Returning success with an active stream invalidates it, rolls back, and returns `ActiveStream`. Polling a started stream in another scope or task fails before further I/O. Scope teardown also cancels retained buffered-operation futures.
-
-## Migrations
-
-Enable `migrate`. Build `Migration` values from a positive, strictly increasing version, description, and static `Sql`, then call `Migrator::try_new(namespace, &migrations)?.run(&db).await?`. Scripts may contain multiple statements; applications must omit transaction control and nontransactional DDL.
-
-The `_sqly_migrations` ledger keys rows by namespace and version. A pending batch and its ledger entries commit together. SQLite reserves the writer; PostgreSQL takes transaction-scoped advisory locks before reading the ledger. Advisory keys are the signed first eight SHA-256 bytes of a prefix, NUL, and namespace: `sqly:migrations:ledger:v1` with an empty namespace, then `sqly:migrations:namespace:v1` with the selected namespace. The common lock remains held through the batch, so different namespaces also serialize.
-
-`with_compatibility(target, minimum_upgradeable)` limits the target and rejects nonempty histories older than the supported minimum. Checksums preserve SHA-256 of decimal version, NUL, description, NUL, SQLite SQL, NUL, PostgreSQL SQL, including all SQL whitespace. Both dialects participate even in single-backend builds.
-
-`adopt_legacy(LegacyLedger::try_new(table)?)` supports application-named legacy tables with `version`, `description`, `checksum`, and `applied_at` columns. The latter three columns contain text. It validates the complete prefix, preserves metadata bytes, completes matching partial copies, and rejects conflicts without replaying historical SQL. A missing legacy table permits fresh startup. Adoption and pending migrations share one transaction. Stop old runners before adoption; an old binary must not advance its separate ledger after cutover. Errors use `migrate::MigrationError`.
-
-## Connections
-
-Use a database URL (`&str`, `String`, or `&String`) or explicit `SqliteOptions` / `PostgresOptions`. `Database::builder()` configures pool size and acquisition timeout. Defaults are five connections and a 30-second acquisition timeout. Managed in-memory SQLite uses one query connection and a separate private keeper so connection replacement does not erase committed data. `ConnectOptions::as_sqlite` and `as_postgres` expose the sqly-owned settings. `SqliteOptions::filename` returns a file path, or `None` for in-memory storage, so applications can apply their own directory policy.
-
-SQLite foreign keys are enabled. File creation, read-only mode, and WAL are explicit options. URLs support `mode=ro|rw|rwc|memory`; use option methods for WAL and busy timeout. `SqliteOptions::new(path)` accepts plain file paths; use `in_memory()` for isolated memory databases.
-
-PostgreSQL requires an explicit host or Unix-socket directory, database, and username. A host starting with `/` selects a socket directory; URLs percent-encode that directory in the host field. Passwords come from the URL or options. TLS verifies the server identity by default; local plaintext connections must select `sslmode=disable`. Supported URL options are `sslmode=verify-full|verify-ca|require|prefer|allow|disable`, `sslrootcert`, and `application_name`. Unknown or duplicate URL options fail.
-
-Sqly does not merge PostgreSQL environment settings or password files. `PGOPTIONS`, `PGSSLROOTCERT`, `PGSSLCERT`, and `PGSSLKEY` must be unset because SQLx cannot clear these inherited fields through its public API; sqly rejects such configuration before connecting. Use explicit options instead. Other SQLx environment defaults are overwritten with sqly's explicit values.
-
-Options, queries, and top-level errors redact sensitive contents in formatting. Error source chains retain diagnostic causes and may contain server data. Do not expose those chains directly to clients.
-
-## Development
-
-Requires Rust 1.94 or later, using Rust 2024. Install the pinned tools:
-
-```sh
-mise trust
-mise install --locked --jobs=1
-mise run setup
-mise run dev
-mise run test
-mise run check
-```
-
-The default test task provisions a disposable PostgreSQL container using Docker. See [DEVELOPING.md](DEVELOPING.md) for the feature matrix and test-service options. Release tags verify library packages; they do not publish a crate.
+Licensed under the [MIT License](https://github.com/lithoscomputer/sqly/blob/main/LICENSE).
