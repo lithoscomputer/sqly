@@ -34,7 +34,7 @@ The project uses Rust 2024 and Rust 1.94 as its minimum supported version. Mise 
 
 The separate `consumers/warehouse` crate exercises a different schema through sqly’s public API, including custom values, cross-store ambient atomicity, explicit transactions, streaming, and a migration namespace. Its runtime tests run with the normal test tasks, and feature and Rust 1.94 checks compile it independently.
 
-The compile matrix covers defaults, no features, each backend alone, both backends, integrations without backends, each backend with integrations, and all features. The runtime matrix covers both drivers, each alone with value integrations, and neither backend. Disabled-backend tests run in the relevant builds. Nextest does not run doctests; the separate task includes public examples and compile-fail checks for unsupported representations, transaction borrowing, and read-only builder methods.
+The compile matrix covers defaults, no features, each backend alone, both backends, integrations without backends, each backend with integrations, and all features. The runtime matrix covers both drivers, each alone with value integrations, and neither backend. Disabled-backend tests run in the relevant builds. Nextest does not run doctests; the separate task runs the README examples with SQLite enabled and includes public examples and compile-fail checks for unsupported representations, transaction borrowing, and read-only builder methods.
 
 `mise run test` and `mise run test:release` create disposable PostgreSQL 18.4 containers using a fixed image digest. Docker must be available. The helper removes its container on exit and stores database data in temporary memory. Required PostgreSQL tests fail if their service is unavailable.
 
@@ -58,4 +58,4 @@ Run `mise run setup`, then read `.ai/style-guides/rust-style-guide/SKILL.md` and
 
 Routine checks run for pull requests and pushes to `main`. Extended checks run nightly. Both use macOS arm64, Linux x86\_64, and Linux arm64 runners. Pushed `v*` tags and manual release-workflow runs verify the same library release candidate on all three platforms.
 
-Publication stays disabled. Before the first release, complete API behavior checks, Conveyor replacement, independent consumer verification, and package metadata, including a project license and crate-name availability. No license has been selected by the repository yet.
+Publication stays disabled. Before the first release, complete API behavior checks, Conveyor replacement, independent consumer verification, and package metadata, including the MIT license in Cargo metadata and crate-name availability. The repository license is [MIT](https://github.com/lithoscomputer/sqly/blob/main/LICENSE).
